@@ -8,6 +8,9 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+
+      # Import the Home Manager configuration.
+      <home-manager/nixos>
     ];
 
   # Bootloader.
@@ -83,11 +86,24 @@
     isNormalUser = true;
     description = "Raghavendra Nyshadham";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-      firefox
-      git
-    ];
   };
+
+  home-manager.users.raghnysh = { pkgs, ... }: {
+    home.stateVersion = "23.05";
+    programs.bash.enable = true;
+    programs.emacs = {
+      enable = true;
+      extraPackages = epkgs: with epkgs; [
+        magit
+        nix-mode
+      ];
+    };
+    programs.firefox.enable = true;
+    programs.git.enable = true;
+  };
+
+  home-manager.useUserPackages = true;
+  home-manager.useGlobalPkgs = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
