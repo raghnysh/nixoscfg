@@ -112,6 +112,14 @@
       };
       "org/gnome/desktop/notifications".show-in-lock-screen = false;
     };
+    gtk = {
+      enable = true;
+      cursorTheme = {
+        package = pkgs.bibata-cursors;
+        name = "Bibata-Modern-Amber";
+        size = 50;
+      };
+    };
     programs.bash.enable = true;
     programs.emacs = {
       enable = true;
