@@ -90,6 +90,28 @@
 
   home-manager.users.raghnysh = { pkgs, ... }: {
     home.stateVersion = "23.05";
+    dconf.settings = let
+      keys = "org/gnome/settings-daemon/plugins/media-keys";
+      bindings = "${keys}/custom-keybindings";
+      suspend = "${bindings}/suspend";
+    in {
+      "${keys}" = {
+        custom-keybindings = map (x: "/${x}/") [
+          suspend
+        ];
+      };
+      ## After I wrote this, I found from the Thinkpad p15v Gen 1 User
+      ## Guide that "Fn 4" suspends the computer, but I am keeping
+      ## this as a reminder of how to set custom key bindings in this
+      ## file.
+      "${suspend}" = {
+        ## Pause = "Fn P" (Thinkpad p15v Gen 1 User Guide, page 17)
+        binding = "Pause";
+        command = "systemctl suspend";
+        name = "Suspend the computer";
+      };
+      "org/gnome/desktop/notifications".show-in-lock-screen = false;
+    };
     programs.bash.enable = true;
     programs.emacs = {
       enable = true;
