@@ -140,6 +140,15 @@
   ## /run/current-system/configuration.nix.
   system.copySystemConfiguration = true;
 
+  ## Suspend the laptop when the lid is closed, even when an external
+  ## monitor is connected.
+  ## https://apiraino.github.io/ubuntu-gnome-power/
+  services.logind.lidSwitchDocked = "suspend";
+  services.upower = {
+    enable = true;
+    ignoreLid = true;
+  };
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
