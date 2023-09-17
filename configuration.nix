@@ -135,6 +135,11 @@
   home-manager.useUserPackages = true;
   home-manager.useGlobalPkgs = true;
 
+  ## Keep a symbolic link to the current generation's
+  ## /etc/nixos/configuration.nix as
+  ## /run/current-system/configuration.nix.
+  system.copySystemConfiguration = true;
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
