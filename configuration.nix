@@ -1,189 +1,189 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
+### NixOS configuration file
 
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
+  ## =================================================================
+  ## Base version of NixOS
+  ## =================================================================
 
-      # Import the Home Manager configuration.
-      <home-manager/nixos>
-    ];
+  system.stateVersion = "23.05";
 
-  # Bootloader.
+  ## =================================================================
+  ## Copy of this file at /run/current-system/configuration.nix
+  ## =================================================================
+
+  system.copySystemConfiguration = true;
+
+  ## =================================================================
+  ## Other configuration files
+  ## =================================================================
+
+  imports = [
+    ./hardware-configuration.nix
+    <home-manager/nixos>
+  ];
+
+  ## =================================================================
+  ## Bootloader
+  ## =================================================================
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "bastet"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  ## =================================================================
+  ## Networking
+  ## =================================================================
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
+  networking.hostName = "bastet";
   networking.networkmanager.enable = true;
 
-  # Set your time zone.
+  ## =================================================================
+  ## Date and time
+  ## =================================================================
+
   time.timeZone = "Asia/Kolkata";
 
-  # Select internationalisation properties.
+  ## =================================================================
+  ## Internationalisation
+  ## =================================================================
+
   i18n.defaultLocale = "en_US.UTF-8";
+  i18n.extraLocaleSettings.LC_ADDRESS = "en_US.UTF-8";
+  i18n.extraLocaleSettings.LC_IDENTIFICATION = "en_US.UTF-8";
+  i18n.extraLocaleSettings.LC_MEASUREMENT = "en_US.UTF-8";
+  i18n.extraLocaleSettings.LC_MONETARY = "en_US.UTF-8";
+  i18n.extraLocaleSettings.LC_NAME = "en_US.UTF-8";
+  i18n.extraLocaleSettings.LC_NUMERIC = "en_US.UTF-8";
+  i18n.extraLocaleSettings.LC_PAPER = "en_US.UTF-8";
+  i18n.extraLocaleSettings.LC_TELEPHONE = "en_US.UTF-8";
+  i18n.extraLocaleSettings.LC_TIME = "en_US.UTF-8";
 
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "en_US.UTF-8";
-    LC_TIME = "en_US.UTF-8";
-  };
+  ## =================================================================
+  ## Graphical environment
+  ## =================================================================
 
-  # Enable the X11 windowing system.
   services.xserver.enable = true;
-
-  # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
+  services.xserver.layout = "us";
+  services.xserver.xkbVariant = "";
 
-  # Configure keymap in X11
-  services.xserver = {
-    layout = "us";
-    xkbVariant = "";
-  };
+  ## =================================================================
+  ## Printing
+  ## =================================================================
 
-  # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  # Enable sound with pipewire.
+  ## =================================================================
+  ## Sound
+  ## =================================================================
+
   sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
+  services.pipewire.enable = true;
+  services.pipewire.alsa.enable = true;
+  services.pipewire.alsa.support32Bit = true;
+  services.pipewire.pulse.enable = true;
 
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
-  };
+  ## =================================================================
+  ## Non-free packages
+  ## =================================================================
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
+  nixpkgs.config.allowUnfree = true;
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.raghnysh = {
-    isNormalUser = true;
-    description = "Raghavendra Nyshadham";
-    extraGroups = [ "networkmanager" "wheel" ];
-  };
+  ## =================================================================
+  ## Suspending when lid closed even with external monitor attached
+  ## =================================================================
+
+  ## https://apiraino.github.io/ubuntu-gnome-power/
+
+  services.logind.lidSwitchDocked = "suspend";
+  services.upower.enable = true;
+  services.upower.ignoreLid = true;
+
+  ## =================================================================
+  ## Users
+  ## =================================================================
+
+  users.users.raghnysh.isNormalUser = true;
+  users.users.raghnysh.description = "Raghavendra Nyshadham";
+  users.users.raghnysh.extraGroups = [ "networkmanager" "wheel" ];
+
+  ## =================================================================
+  ## General settings of Home Manager
+  ## =================================================================
+
+  home-manager.useGlobalPkgs = true;
+  home-manager.useUserPackages = true;
+
+  ## =================================================================
+  ## User settings of Home Manager
+  ## =================================================================
 
   home-manager.users.raghnysh = { pkgs, ... }: {
     home.stateVersion = "23.05";
-    dconf.settings = let
-      keys = "org/gnome/settings-daemon/plugins/media-keys";
-      bindings = "${keys}/custom-keybindings";
-      suspend = "${bindings}/suspend";
-    in {
-      "${keys}" = {
-        custom-keybindings = map (x: "/${x}/") [
-          suspend
-        ];
-      };
-      ## After I wrote this, I found from the Thinkpad p15v Gen 1 User
-      ## Guide that "Fn 4" suspends the computer, but I am keeping
-      ## this as a reminder of how to set custom key bindings in this
-      ## file.
-      "${suspend}" = {
-        ## Pause = "Fn P" (Thinkpad p15v Gen 1 User Guide, page 17)
-        binding = "Pause";
-        command = "systemctl suspend";
-        name = "Suspend the computer";
-      };
-      "org/gnome/desktop/notifications".show-in-lock-screen = false;
-    };
-    gtk = {
-      enable = true;
-      cursorTheme = {
-        package = pkgs.bibata-cursors;
-        name = "Bibata-Modern-Amber";
-        size = 50;
-      };
-    };
+
+    ## ===============================================================
+    ## Custom keybindings
+    ## ===============================================================
+
+    dconf.settings."org/gnome/settings-daemon/plugins/media-keys".custom-keybindings = [
+      "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/suspend/"
+    ];
+
+    ## After I wrote this, I found from the Thinkpad p15v Gen 1 User
+    ## Guide that "Fn 4" suspends the computer, but I am keeping this
+    ## as a reminder of how to set custom key bindings in this file.
+    dconf.settings."org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/suspend".name = "Suspend the computer";
+    ## Pause = "Fn P" (Thinkpad p15v Gen 1 User Guide, page 17)
+    dconf.settings."org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/suspend".binding = "Pause";
+    dconf.settings."org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/suspend".command = "systemctl suspend";
+
+    ## ===============================================================
+    ## Display of notifications on locked screen
+    ## ===============================================================
+
+    dconf.settings."org/gnome/desktop/notifications".show-in-lock-screen = false;
+
+    ## ===============================================================
+    ## Cursor theme
+    ## ===============================================================
+
+    gtk.enable = true;
+    gtk.cursorTheme.package = pkgs.bibata-cursors;
+    gtk.cursorTheme.name = "Bibata-Modern-Amber";
+    gtk.cursorTheme.size = 50;
+
+    ## ===============================================================
+    ## Bash
+    ## ===============================================================
+
     programs.bash.enable = true;
-    programs.emacs = {
-      enable = true;
-      extraPackages = epkgs: with epkgs; [
-        magit
-        nix-mode
-      ];
-    };
-    programs.firefox.enable = true;
+
+    ## ===============================================================
+    ## Git
+    ## ===============================================================
+
     programs.git.enable = true;
+
+    ## ===============================================================
+    ## Emacs
+    ## ===============================================================
+
+    programs.emacs.enable = true;
+    programs.emacs.extraPackages = epkgs: with epkgs; [
+      magit
+      nix-mode
+    ];
+
+    ## ===============================================================
+    ## Firefox
+    ## ===============================================================
+
+    programs.firefox.enable = true;
   };
-
-  home-manager.useUserPackages = true;
-  home-manager.useGlobalPkgs = true;
-
-  ## Keep a symbolic link to the current generation's
-  ## /etc/nixos/configuration.nix as
-  ## /run/current-system/configuration.nix.
-  system.copySystemConfiguration = true;
-
-  ## Suspend the laptop when the lid is closed, even when an external
-  ## monitor is connected.
-  ## https://apiraino.github.io/ubuntu-gnome-power/
-  services.logind.lidSwitchDocked = "suspend";
-  services.upower = {
-    enable = true;
-    ignoreLid = true;
-  };
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    #  wget
-  ];
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "23.05"; # Did you read the comment?
-
 }
+
+### End of file
