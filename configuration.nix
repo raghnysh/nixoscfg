@@ -48,16 +48,8 @@
   ## Internationalisation
   ## =================================================================
 
-  i18n.defaultLocale = "en_US.UTF-8";
-  i18n.extraLocaleSettings.LC_ADDRESS = "en_US.UTF-8";
-  i18n.extraLocaleSettings.LC_IDENTIFICATION = "en_US.UTF-8";
-  i18n.extraLocaleSettings.LC_MEASUREMENT = "en_US.UTF-8";
-  i18n.extraLocaleSettings.LC_MONETARY = "en_US.UTF-8";
-  i18n.extraLocaleSettings.LC_NAME = "en_US.UTF-8";
-  i18n.extraLocaleSettings.LC_NUMERIC = "en_US.UTF-8";
-  i18n.extraLocaleSettings.LC_PAPER = "en_US.UTF-8";
-  i18n.extraLocaleSettings.LC_TELEPHONE = "en_US.UTF-8";
-  i18n.extraLocaleSettings.LC_TIME = "en_US.UTF-8";
+  i18n.defaultLocale = "en_GB.UTF-8";
+  i18n.extraLocaleSettings.LC_COLLATE = "C.UTF-8";
 
   ## =================================================================
   ## Graphical environment
