@@ -154,6 +154,55 @@
 
     programs.bash.enable = true;
 
+    programs.bash.enableCompletion = true;
+
+    programs.bash.initExtra =
+      ''
+        prompt_bold_blue="\[\033[01;34m\]"
+        prompt_normal="\[\033[00m\]"
+        if [ $TERM = "dumb" ] ; then
+            PS1="\$ "
+        else
+            PS1="[$prompt_bold_blue\h:\w$prompt_normal]\$ "
+        fi
+        PROMPT_COMMAND="history -a; history -n; $PROMPT_COMMAND"
+      '';
+
+    programs.bash.historyControl = [
+      "ignorespace" "ignoredups" "erasedups"
+    ];
+
+    programs.bash.historyIgnore = [
+      "history" "ls" "cd" "bg" "fg" "ps" "top" "exit"
+    ];
+
+    programs.bash.historySize = 20000;
+    programs.bash.historyFileSize = 200000;
+
+    programs.bash.sessionVariables = {
+      EDITOR = "nano";
+      IGNOREOF = 0;
+      LESS = "-R";
+      PAGER = "less";
+    };
+
+    programs.bash.shellOptions = [
+      "checkjobs"
+      "checkwinsize"
+      "cmdhist"
+      "extglob"
+      "globstar"
+      "histappend"
+    ];
+
+    programs.bash.shellAliases = {
+      cp = "cp -i";
+      mv = "mv -i";
+      rm = "rm -i";
+      ls = "ls --classify --color";
+      rsync = "rsync -a -e ssh --progress";
+    };
+
     ## ===============================================================
     ## Git
     ## ===============================================================
