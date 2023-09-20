@@ -225,6 +225,9 @@
     ## ===============================================================
 
     programs.git.enable = true;
+    programs.git.userName = "Raghavendra Nyshadham";
+    programs.git.userEmail = "rn@raghnysh.com";
+    programs.git.extraConfig.status.showUntrackedFiles = "all";
 
     ## ===============================================================
     ## Emacs
