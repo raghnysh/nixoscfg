@@ -204,6 +204,23 @@
     };
 
     ## ===============================================================
+    ## Readline
+    ## ===============================================================
+
+    programs.readline.enable = true;
+
+    programs.readline.bindings = {
+      "\\e[A" = "history-search-backward";
+      "\\e[B" = "history-search-forward";
+      "\\e/" = "dabbrev-expand";
+    };
+
+    programs.readline.variables = {
+      history-size = 10000;
+      show-all-if-ambiguous = true;
+    };
+
+    ## ===============================================================
     ## Git
     ## ===============================================================
 
