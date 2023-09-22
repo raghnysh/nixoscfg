@@ -156,17 +156,16 @@
 
     programs.bash.enableCompletion = true;
 
-    programs.bash.initExtra =
-      ''
-        prompt_bold_blue="\[\033[01;34m\]"
-        prompt_normal="\[\033[00m\]"
-        if [ $TERM = "dumb" ] ; then
-            PS1="\$ "
-        else
-            PS1="[$prompt_bold_blue\h:\w$prompt_normal]\$ "
-        fi
-        PROMPT_COMMAND="history -a; history -n; $PROMPT_COMMAND"
-      '';
+    programs.bash.initExtra = ''
+      prompt_bold_blue="\[\033[01;34m\]"
+      prompt_normal="\[\033[00m\]"
+      if test $TERM = "dumb" ; then
+        PS1="\$ "
+      else
+        PS1="[$prompt_bold_blue\h:\w$prompt_normal]\$ "
+      fi
+      PROMPT_COMMAND="history -a; history -n; $PROMPT_COMMAND"
+    '';
 
     programs.bash.historyControl = [
       "ignorespace" "ignoredups" "erasedups"
