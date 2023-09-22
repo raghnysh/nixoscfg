@@ -233,6 +233,8 @@
     ## ===============================================================
 
     programs.emacs.enable = true;
+    programs.emacs.package = pkgs.emacs29-pgtk;
+
     programs.emacs.extraPackages = epkgs: with epkgs; [
       magit
       nix-mode
