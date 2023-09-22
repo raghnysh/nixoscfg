@@ -240,6 +240,35 @@
       nix-mode
     ];
 
+    programs.emacs.extraConfig = ''
+      (setq frame-title-format
+            '("Emacs: " (:eval (or buffer-file-name
+                                   dired-directory
+                                   (buffer-name)))))
+
+      (fringe-mode 1)
+      (menu-bar-mode -1)
+      (tool-bar-mode -1)
+      (set-scroll-bar-mode nil)
+      (modify-all-frames-parameters '((fullscreen . maximized)))
+      (defvar my-laptop-monitor-font "DejaVu Sans Mono 16")
+      (defvar my-external-monitor-font "DejaVu Sans Mono 14")
+      (modify-all-frames-parameters `((font . ,my-laptop-monitor-font)))
+
+      (defun my-frame-on-external-monitor-p ()
+        (string-match (rx (seq string-start "DELL"))
+                          (frame-monitor-attribute 'name)))
+
+      (defun my-set-frame-font-for-monitor ()
+        (interactive)
+        (set-frame-font
+          (if (my-frame-on-external-monitor-p)
+              my-external-monitor-font
+            my-laptop-monitor-font)))
+
+      (keymap-global-set "s-=" #'my-set-frame-font-for-monitor)
+    '';
+
     ## ===============================================================
     ## Firefox
     ## ===============================================================
