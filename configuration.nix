@@ -255,18 +255,29 @@
       (defvar my-external-monitor-font "DejaVu Sans Mono 14")
       (modify-all-frames-parameters `((font . ,my-laptop-monitor-font)))
 
-      (defun my-frame-on-external-monitor-p ()
+      (defun my-frame-on-external-monitor-p (&optional frame)
         (string-match (rx (seq string-start "DELL"))
-                          (frame-monitor-attribute 'name)))
+                          (frame-monitor-attribute 'name frame)))
 
-      (defun my-set-frame-font-for-monitor ()
+      (defun my-set-frame-font-for-monitor (&optional frame)
         (interactive)
-        (set-frame-font
-          (if (my-frame-on-external-monitor-p)
+        (set-frame-parameter frame 'font
+          (if (my-frame-on-external-monitor-p frame)
               my-external-monitor-font
             my-laptop-monitor-font)))
 
       (keymap-global-set "s-=" #'my-set-frame-font-for-monitor)
+
+      (defun my-set-focused-frames-font-for-monitor ()
+        (dolist (frame (frame-list))
+          (when (eq (frame-focus-state frame) t)
+            (my-set-frame-font-for-monitor frame))))
+
+      ;; https://lists.gnu.org/archive/html/help-gnu-emacs/2016-05/msg00172.html
+      ;; The hook after-make-frame-functions used there is now
+      ;; deprecated, and replaced with after-focus-change-function.
+      (add-function :after after-focus-change-function
+        #'my-set-focused-frames-font-for-monitor)
     '';
 
     ## ===============================================================
