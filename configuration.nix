@@ -256,8 +256,8 @@
       (modify-all-frames-parameters `((font . ,my-laptop-monitor-font)))
 
       (defun my-frame-on-external-monitor-p (&optional frame)
-        (string-match (rx (seq string-start "DELL"))
-                          (frame-monitor-attribute 'name frame)))
+        (string-match-p (rx (seq string-start "DELL"))
+                        (frame-monitor-attribute 'name frame)))
 
       (defun my-set-frame-font-for-monitor (&optional frame)
         (interactive)
