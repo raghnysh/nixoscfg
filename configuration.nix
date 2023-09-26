@@ -96,6 +96,42 @@
   services.upower.ignoreLid = true;
 
   ## =================================================================
+  ## Limits
+  ## =================================================================
+
+  ## Avoid "too many open files" error when installing TeX Live with
+  ## documentation.  nixos-rebuild has to be run with this setting
+  ## before it is run for the TeX Live installation.
+  ## https://github.com/NixOS/nixpkgs/issues/171218#issuecomment-1114708931
+
+  security.pam.loginLimits = [
+    {
+      domain = "*";
+      type = "soft";
+      item = "nofile";
+      value = "300000";
+    }
+  ];
+
+  ## =================================================================
+  ## Overlays
+  ## =================================================================
+
+  nixpkgs.overlays = [
+    (final: prev: {
+      ## Copy noweb's LaTeX style files to $out/tex/latex/noweb so
+      ## that they are put in the correct directory (with respect to
+      ## the TeX Directory Strucuture (TDS)) under TeX Live's
+      ## TEXMFDIST when noweb is used as an extra package of TeX Live.
+      ## This is necessary for TeX Live's kpsewhich to locate these
+      ## files.
+      noweb = prev.noweb.overrideAttrs (oldAttrs : {
+        postInstall = oldAttrs.postInstall + "cp -R $tex/tex $out";
+      });
+    })
+  ];
+
+  ## =================================================================
   ## Users
   ## =================================================================
 
@@ -115,6 +151,10 @@
   ## =================================================================
 
   home-manager.users.raghnysh = { pkgs, ... }: {
+    ## ===============================================================
+    ## Base version of Home Manager
+    ## ===============================================================
+
     home.stateVersion = "23.05";
 
     ## ===============================================================
@@ -229,6 +269,21 @@
     programs.git.extraConfig.status.showUntrackedFiles = "all";
 
     ## ===============================================================
+    ## TeX Live
+    ## ===============================================================
+
+    programs.texlive.enable = true;
+
+    programs.texlive.extraPackages = tpkgs: {
+      inherit (tpkgs) scheme-full;
+
+      pkgFilter = pkg:
+        pkgs.lib.elem pkg.tlType [ "run" "bin" "doc" ];
+
+      noweb = { pkgs = [ pkgs.noweb ]; };
+    };
+
+    ## ===============================================================
     ## Emacs
     ## ===============================================================
 
@@ -285,6 +340,14 @@
     ## ===============================================================
 
     programs.firefox.enable = true;
+
+    ## ===============================================================
+    ## Packages that are not Home Manager modules
+    ## ===============================================================
+
+    home.packages = [
+      pkgs.noweb
+    ];
   };
 }
 
