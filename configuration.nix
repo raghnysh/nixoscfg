@@ -309,19 +309,34 @@
       (defvar my-laptop-monitor-font "DejaVu Sans Mono 16")
       (defvar my-external-monitor-font "DejaVu Sans Mono 14")
       (modify-all-frames-parameters `((font . ,my-laptop-monitor-font)))
+      (defvar my-laptop-monitor-name "0x08c6")
+      (defvar my-external-monitor-name "DELL U2415")
 
-      (defun my-frame-on-external-monitor-p (&optional frame)
-        (string-match-p (rx (seq string-start "DELL"))
-                        (frame-monitor-attribute 'name frame)))
+      (defun my-frame-monitor-name (&optional frame)
+        (frame-monitor-attribute 'name frame))
 
-      (defun my-set-frame-font-for-monitor (&optional frame)
+      (defun my-monitor-external-p (monitor-name)
+        (string-equal monitor-name my-external-monitor-name))
+
+      (defun my-set-frame-font-for-monitor (&optional frame monitor-name)
         (interactive)
         (set-frame-parameter frame 'font
-          (if (my-frame-on-external-monitor-p frame)
+          (if (my-monitor-external-p (or monitor-name
+                                         (my-frame-monitor-name frame)))
               my-external-monitor-font
             my-laptop-monitor-font)))
 
-      (keymap-global-set "s-=" #'my-set-frame-font-for-monitor)
+      (defun my-set-frame-font-for-laptop-monitor (&optional frame)
+        (interactive)
+        (my-set-frame-font-for-monitor frame my-laptop-monitor-name))
+
+      (defun my-set-frame-font-for-external-monitor (&optional frame)
+        (interactive)
+        (my-set-frame-font-for-monitor frame my-external-monitor-name))
+
+      (keymap-global-set "s-0" #'my-set-frame-font-for-monitor)
+      (keymap-global-set "s-=" #'my-set-frame-font-for-laptop-monitor)
+      (keymap-global-set "s--" #'my-set-frame-font-for-external-monitor)
 
       (defun my-set-focused-frames-font-for-monitor ()
         (dolist (frame (frame-list))
