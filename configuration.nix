@@ -356,6 +356,10 @@
       (global-auto-revert-mode 1)
       (global-display-fill-column-indicator-mode 1)
     '';
+
+    home.file."init.el".target = ".emacs.d/init.el";
+    home.file."init.el".text = ''
+      (setq inhibit-startup-screen t)
     '';
 
     ## ===============================================================
