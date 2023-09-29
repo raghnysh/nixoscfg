@@ -1,7 +1,5 @@
 ### NixOS configuration file
 
-{ config, pkgs, ... }:
-
 {
   ## =================================================================
   ## Base version of NixOS
