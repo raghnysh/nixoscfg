@@ -1,0 +1,2198 @@
+%%% Beginning of file `configuration.nw'
+
+%% Author: Raghavendra Nyshadham <rn@raghnysh.com>
+%%
+%% I place this file in the public domain through the Creative Commons
+%% CC0 1.0 Universal Public Domain Dedication, and waive all copyright
+%% and related rights to the work.  See
+%%
+%% http://creativecommons.org/publicdomain/zero/1.0/
+%%
+%% for the CC0 dedication.
+
+\documentclass[notitlepage]{report}
+
+\usepackage{configuration}
+
+\addbibresource{configuration.bib}
+
+\title{My NixOS configuration}
+
+\hypersetup{pdftitle={My NixOS configuration}}
+
+\hypersetup{pdfsubject={Computer programming}}
+
+\newcommand{\cczero}{I place this document in the public domain
+  through the Creative Commons CC0 1.0 Universal Public Domain
+  Dedication, and waive all copyright and related rights to the work.
+  See \url{http://creativecommons.org/publicdomain/zero/1.0/} for the
+  CC0 dedication.}
+
+\author{Raghavendra Nyshadham\thanks{\cczero} \\
+  {\normalsize\nolinkurl{rn@raghnysh.com}}}
+
+\hypersetup{pdfauthor={Raghavendra Nyshadham (rn@raghnysh.com)}}
+
+\date{2023-03-13}
+
+\begin{document}
+
+\begin{frontpage}
+  \maketitle
+
+  \begin{abstract}
+    This document describes my NixOS configuration.  I use the Noweb
+    literate programming system to obtain from this document a NixOS
+    configuration file and a PDF file of the document.  The current
+    version of the document is available at
+    \url{https://github.com/raghnysh/nixoscfg}.
+
+    \ghtopics{nixos, system-configuration}
+  \end{abstract}
+\end{frontpage}
+
+\restoregeometry
+
+\tableofcontents
+
+\chapter{Introduction}
+\label{cha:rlsgliim}
+
+This document describes my NixOS configuration.  I use the Noweb
+literate programming system to obtain from this document a NixOS
+configuration file and a PDF file of the document.  The current
+version of the document is available at
+\url{https://github.com/raghnysh/nixoscfg}.
+
+The source of this document is written in the language of the Noweb
+literate programming system, which is due to \textcite{bib:199mna1w}.
+The contents of the configuration files mentioned above are specified
+in pieces within this source.  These pieces are called \firstterm{code
+  chunks}.  The Noweb system assembles the configuration files from
+these code chunks through a procedure called \firstterm{tangling}.  The
+system also generates a \LaTeX\ document from this source through a
+procedure called \firstterm{weaving}.  The PDF rendition of this
+document is generated from that \LaTeX\ document using the
+\nwverb|pdflatex| program.
+
+I will intersperse the main text with remarks about code wherever such
+remarks are relevant.  Whenever I do this, I will put the remark on
+code in a numbered block with the name \emph{Code Remark}.  I will
+write interjections in the main text, such as an explanation of some
+documentation convention, in a smaller font, so that I can easily
+distinguish the interjections from the main text.
+
+\chapter{Temporary text}
+\label{cha:mbnj1nw0}
+
+This text is just to ensure that running \texttt{notangle} on this
+file succeeds.
+
+\begin{codechunk}
+\nextchunklabel{chk:1gaz411x}
+<<configuration-noweb.nix>>=
+{}
+@
+\end{codechunk}
+
+\chapter{Infrastructure}
+\label{cha:35ivgljk}
+
+I will describe the infrastructure of the \texttt{protem} project in
+this chapter.  This infrastructure consists of the following kinds of
+files:
+\begin{enumerate}
+\item \label{item:dws4hguy} Files related to the installation of
+  software dependencies of the project
+\item \label{item:bzx9u1p0} Files related to the configuration of the
+  global environment of the project
+\item \label{item:fo1z0nrr} The \LaTeX\ style file for typesetting the
+  documentation of the project
+\item \label{item:s13km23u} Files that configure the GNU Emacs editor
+  that I use to write the source files of the project
+\end{enumerate}
+
+I will describe these files in the remaining sections of this chapter,
+using one section for every item in the above list.
+
+\section{Software dependencies of the project}
+\label{sec:kdb7htya}
+
+This section is about the files (in fact, there is only one file) of
+\cref{item:dws4hguy} on \cpageref{cha:35ivgljk}.  I use the Nix
+package manager \parencite{bib:krparfs8} to provide the software
+dependencies of the project.  The relevant configuration is contained
+in a file called \nolinkurl{flake.nix}.
+
+\subsection{Nix packages}
+\label{sec:ucztoedd}
+
+The Nix packages I will need for this project are a \TeX\ Live package
+for working with \LaTeX\ files, an Emacs package for editing the files
+of the project, and some packages that provide general utilities for
+the project.
+
+I will first list the Nix packages for general utilities:
+\begin{codechunk}
+\nextchunklabel{chk:hmw87jla}
+<<General packages>>=
+cloc
+dune_3
+git
+glibcLocales
+noweb
+ocaml
+@
+\end{codechunk}
+Here are some reasons for installing these packages:
+\begin{enumerate}
+\item \label{item:wgqyfgie} The package \nwverb|noweb| is needed to
+  extract the code and the documentation of the project from the
+  source of this document.  The Noweb system is available in the \TeX\
+  Live package also, but the one in the standalone package
+  \nwverb|noweb| is in general newer than the one in the \TeX\ Live
+  package.
+\item \label{item:vzjqipox} I will use the Git version control system
+  for the project.  The Git system from the Nix package \nwverb|git|
+  is in general newer than the one provided by the base operating
+  system.
+\item \label{item:hjpak8qq} I will use the Ocaml build tool
+  \nwverb|dune|.  The package \nwverb|dune_3| provides a recent
+  version of this build tool.  The \nwverb|ocaml| package is needed to
+  run \nwverb|dune|.
+\item \label{item:hoybnkza} I will use the \nwverb|latexmk| program
+  from \TeX\ Live to process \LaTeX\ files.  This program is written
+  in Perl, and Perl packages in Nix rely on the \nwverb|glibcLocales|
+  package for language localisation settings.
+\item \label{item:hw5i10lo} The \nwverb|cloc| package provides a
+  program to count lines of code in files.  It is sometimes
+  instructive to see its reports.  The \nwverb|cloc| program is
+  written in Perl, so it is another reason to install the
+  \nwverb|glibcLocales| package.
+\end{enumerate}
+
+Now that I have listed the general packages, here is the \TeX\ Live package:
+\begin{codechunk}
+\nextchunklabel{chk:dqdxlxb0}
+<<TeX Live package>>=
+texlive.combined.scheme-full
+@
+\end{codechunk}
+This package provides a complete installation of the \TeX\ Live
+system.  It is a huge package, but it is worth installing it for the
+project because I then don't have to worry about missing \LaTeX\
+style files.  Another factor which mitigates the pain of the large
+download is that Nix caches downloaded packages, and uses the cached
+packages whenever they are required.  Therefore, the same \TeX\ Live
+package can be used across different projects without downloading it
+separately for each of those projects.
+
+The Emacs package for editing the files of the project is obtained by
+combining a base package that contains only the Emacs editor with
+various other packages that contain libraries from archives like ELPA
+and MELPA.  Here I will list only these libraries:
+\begin{codechunk}
+\nextchunklabel{chk:cqjh67e6}
+<<Emacs libraries>>=
+agda-input
+auctex
+company
+dired-subtree
+dune
+helm
+magit
+minions
+moody
+multi-vterm
+nix-mode
+pdf-tools
+tab-bar-echo-area
+tab-bar-groups
+trashed
+vterm
+which-key
+yasnippet
+@
+\end{codechunk}
+I will say why I need these packages when I describe the Emacs
+configuration for the project in \Cref{sec:nfptbrsf}.
+
+\subsection{Nix flake configuration file}
+\label{sec:ffq2af3p}
+
+I will organise the above Nix packages into a \firstterm{flake}, which
+is a Nix structure that provides a reproducible software environment
+for the project.  By ``reproducible'', I mean that if I return after
+several years to this project I should be able to resurrect the same
+software environment for it that I have now.
+
+\begin{interjection}
+  I don't know whether that expectation will be actually satisfied.  I
+  can think of many things that can go wrong: the software
+  repositories that I am using now may disappear after several years,
+  the packages that I am installing now may have dependencies that may
+  be unavailable then, I may be making some mistakes due to my
+  ignorance of Nix, and so on.  This is only a hopeful attempt to
+  achieve reproducibility.
+\end{interjection}
+
+The flake facility is configured for a project by placing a file named
+\nwverb|flake.nix| in the root directory of the project.  This file
+specifies the dependencies of the project (which are called the
+\firstterm{inputs} of the flake), and the packages that will be
+available in the project environment (which are called the
+\firstterm{outputs} of the flake).
+
+Formally, the flake configuration file of this project looks like
+this:
+\begin{codechunk}
+\nextchunklabel{chk:hu4obrhy}
+<<flake.nix>>=
+{
+  inputs = <<inputs dictionary>>;
+  outputs = <<outputs function>>;
+}
+@ %def inputs outputs
+\end{codechunk}
+
+The file contains a Nix dictionary that has two entries, with the keys
+[[inputs]] and [[outputs]].  I will call this dictionary the
+\firstterm{root dictionary} of this project's flake.  The value of the
+entry whose key is [[inputs]] is a dictionary that specifies the
+flakes that this flake depends on; I will describe it in
+\Cref{sec:7jbkh8ol}.  The value of the entry with the key [[outputs]]
+is a function that specifies the packages that will be made available
+by this flake; I will describe it in \Cref{sec:cqbm1jj0}.
+
+\begin{coderemark}
+  \label{crk:y2n7mld0}
+  In the Nix language, a dictionary is actually called an
+  \firstterm{attribute set}.  An entry in a dictionary is called an
+  \firstterm{attribute}; the key of the entry is called the
+  \firstterm{attribute name}, and the value of the entry is called the
+  \firstterm{attribute value}.  I will use the simpler words
+  ``dictionary'', ``entry'', ``key'', and ``value''.  The Nix syntax
+  of a dictionary is like this:
+\begin{verbatim}
+{
+  key-1 = value-1;
+       ...
+  key-n = value-n;
+}
+\end{verbatim}
+  I note to myself that each entry of the dictionary is terminated by
+  a semicolon.  The official reference for the Nix language is
+  \textcite{bib:q7nwwdbe}.
+\end{coderemark}
+
+\subsection{Nix flake inputs}
+\label{sec:7jbkh8ol}
+
+The value of the entry with the key [[inputs]] in the root
+dictionary of this project's flake is itself a nested dictionary that
+looks like this:
+\begin{verbatim}
+{
+  key-1 = {
+    url = "repo-1/hash-1";
+  };
+             ...
+  key-n = {
+    url = "repo-n/hash-n";
+  };
+}
+\end{verbatim}
+I will call this the \firstterm{inputs dictionary} of this project's
+flake.  Each entry
+\begin{verbatim}
+key-i = {
+  url = "repo-i/hash-i";
+};
+\end{verbatim}
+of this dictionary specifies an \firstterm{input flake} of this
+project's flake, that is, a flake that this project's flake depends
+on.  I will call the key \nwverb|key-i| of the entry the key of that
+input flake.  The value of the entry is a dictionary with one entry,
+whose key is \nwverb|url|, and whose value I will call the URL of the
+input flake.  So the URL of the input flake is a string of the form
+\nwverb|repo-i/hash-i|.  The substring \nwverb|repo-i| of the URL
+specifies the GitHub repository from which the defining files of the
+input flake should be fetched for use in this project.  The substring
+\nwverb|hash-i| of the URL specifies a commit hash in that repository;
+the files fetched should be from the revision of the repository that
+is identified by the hash.  I will call \nwverb|repo-i| the repository
+of the input flake, and \nwverb|hash-i| the hash of the input flake.
+
+Here explicitly is the [[inputs]] dictionary of this project's
+flake:
+\begin{codechunk}
+\nextchunklabel{chk:cymsvzy0}
+<<inputs dictionary>>=
+{
+  nixpkgs = {
+    url = "<<nixpkgs repo>>/<<nixpkgs hash>>";
+  };
+  nixpkgsTL = {
+    url = "<<nixpkgs repo>>/<<nixpkgsTL hash>>";
+  };
+  emacsOverlay = {
+    url = "<<emacsOverlay repo>>/<<emacsOverlay hash>>";
+  };
+}
+@ %def nixpkgs nixpkgsTL emacsOverlay
+\end{codechunk}
+So there are three input flakes, with the keys [[nixpkgs]],
+[[nixpkgsTL]], and [[emacsOverlay]].
+
+The input flake whose key is [[nixpkgs]] provides the general
+packages listed in the code chunk \subpageref{chk:hmw87jla}.  Its
+repository is the official Nix packages repository:
+\begin{codechunk}
+\nextchunklabel{chk:1aau3xnp}
+<<nixpkgs repo>>=
+github:nixos/nixpkgs
+@
+\end{codechunk}
+Here is the hash of this input flake:
+\begin{codechunk}
+\nextchunklabel{chk:rssnu3tr}
+<<nixpkgs hash>>=
+af9b7e6e946ebb0e10ec942ed6261d7010f9618a
+@
+\end{codechunk}
+It marks a commit in the \nwverb|nixpkgs-unstable| branch of the
+repository that was recent around 6 March 2023, a day on which I
+happened to look at the repository.  There is nothing special about
+the commit or the date.
+
+The input flake with the key [[nixpkgsTL]] provides the \TeX\
+Live package specified in the code chunk \subpageref{chk:dqdxlxb0}.
+Its repository is also the official Nix packages repository.  However
+the hash of this input flake is different from the hash of the input
+flake with the key [[nixpkgs]]:
+\begin{codechunk}
+\nextchunklabel{chk:t9pgf5qk}
+<<nixpkgsTL hash>>=
+f12a7d932ddf7f4d0c5e0c5664dec08e718e67a8
+@
+\end{codechunk}
+This hash marks one of the last revisions of Nix packages to offer
+\TeX\ Live 2021.  The later revisions of Nix packages provide \TeX\
+Live 2022, which does not work well with Noweb in that the code chunks
+in the PDF documentation are not indented properly
+(\href{https://github.com/nrnrnr/noweb/issues/24}{Issue 24} in the
+Noweb repository at GitHub).  I therefore choose to use this
+particular revision of Nix packages to provide \TeX\ Live for the
+project.
+
+The input flake whose key is [[emacsOverlay]] provides a Nix
+``overlay'', which is code that modifies the official Nix package for
+Emacs to provide a more recent version of Emacs than the official
+package.  The repository of this overlay is maintained by the Nix
+community:
+\begin{codechunk}
+\nextchunklabel{chk:6xowxqjd}
+<<emacsOverlay repo>>=
+github:nix-community/emacs-overlay
+@
+\end{codechunk}
+Like the hash of the input flake with the key [[nixpkgs]], the
+hash of this input flake marks a commit in the \nwverb|master| branch
+of the Emacs overlay repository that was recent around the arbitrary
+date 6 March 2023.
+\begin{codechunk}
+\nextchunklabel{chk:35crtfm9}
+<<emacsOverlay hash>>=
+d7f3a69423caab0703cf303baa27160842c2cdde
+@
+\end{codechunk}
+
+\subsection{Nix flake outputs}
+\label{sec:cqbm1jj0}
+
+The value of the entry with the key [[outputs]] in the root
+dictionary of this project's flake is a function of the kind
+\begin{verbatim}
+{ key-1, ..., key-n, self } :
+{
+  pkg-key-1 = pkg-def-1;
+           ...
+  pkg-key-m = pkg-def-m;
+}
+\end{verbatim}
+I will call this function the \firstterm{outputs function} of this
+project's flake.  The function takes certain arguments, and returns a
+dictionary.  I will call the dictionary that is returned by the
+outputs function the \firstterm{outputs dictionary} of this project's
+flake.
+
+The arguments \nwverb|key-1|, \ldots, \nwverb|key-n| of the outputs
+function are the same as the keys of the input flakes as specified in
+the [[inputs]] part of the root dictionary.  The argument
+\nwverb|key-i| represents the outputs dictionary of the input flake
+with the key \nwverb|key-i|.  The argument \nwverb|self| is mandatory,
+and represents the outputs dictionary of this project's flake.
+
+Each entry
+\begin{verbatim}
+pkg-key-1 = pkg-def-1;
+\end{verbatim}
+of the outputs dictionary represents a package that will be made
+available by this project's flake.  The key \nwverb|pkg-key-i| of the
+entry specifies the name of the package.  The value \nwverb|pkg-def-i|
+specifies the definition of the package.  The package can be installed
+in the project environment with the command
+\begin{verbatim}
+nix build .#pkg-key-i
+\end{verbatim}
+
+Here explicitly is the outputs function of this project's flake:
+\begin{codechunk}
+\nextchunklabel{chk:4tpnq2vi}
+<<outputs function>>=
+{ <<outputs function arguments>> }:
+<<outputs dictionary>>
+@
+\end{codechunk}
+
+The arguments of the outputs function are the keys [[nixpkgs]],
+[[nixpkgsTL]], and [[emacsOverlay]] of the input flakes that
+were specified in \Cref{sec:7jbkh8ol}.
+\begin{codechunk}
+\nextchunklabel{chk:tsnr3yey}
+<<outputs function arguments>>=
+nixpkgs, nixpkgsTL, emacsOverlay, self
+@
+\end{codechunk}
+Each of these arguments represents the outputs dictionary of the
+corresponding input flake.  As I have said above, the argument
+\nwverb|self| is mandatory, but I will not be using it in the body of
+the outputs function.
+
+The outputs dictionary of this project's flake has only one entry.
+That entry represents the main package of the project, which is
+combined from a few sub-packages, and is called \nwverb|allPackage|.
+\begin{codechunk}
+\nextchunklabel{chk:nzk3mcej}
+<<outputs dictionary>>=
+{
+  allPackage =
+    let
+      <<Define the sub-packages>>
+    in
+      <<Combine the sub-packages>>;
+}
+@ %def allPackage
+\end{codechunk}
+I took the idea of combining all the packages necessary for a project
+into a single package like this from a
+\href{https://github.com/NixOS/nix/issues/7165#issuecomment-1309220847}{comment
+  on Issue 7165} in the Nix project's repository at GitHub.
+
+There are three sub-packages, corresponding to the general packages,
+the \TeX\ Live package, and the Emacs package, that I had described in
+\Cref{sec:ucztoedd}.  I will define three local variables named
+[[generalPackages]], \nwverb|texlivePackages|, and
+\nwverb|emacsPackage| to represent these sub-packages.  (Actually, the
+value of the variable [[generalPackages]] is a list of
+sub-packages, but it is convenient to refer to the list itself as a
+sub-package.)
+\begin{codechunk}
+\nextchunklabel{chk:tczly2jy}
+<<Define the sub-packages>>=
+<<Define generalPackages>>
+<<Define texlivePackage>>
+<<Define emacsPackage>>
+@
+\end{codechunk}
+
+I combine the above sub-packages to define the main package of this
+project's flake like this:
+\begin{codechunk}
+\nextchunklabel{chk:210pn37e}
+<<Combine the sub-packages>>=
+<<Function for combining packages>> {
+  name = "allPackage";
+  paths = generalPackages ++ [ texlivePackage emacsPackage ];
+}
+@
+\end{codechunk}
+\noindent The name of the main package is [[allPackage]], and it
+is obtained by combining the above three sub-packages using a function
+for combining packages.  I will define the combining function in code
+chunk \subpageref{chk:ohmjfu6s} below.
+
+To define the variable [[generalPackages]], I first augment the
+Nix packages collection from the repository of the input flake whose
+key is [[nixpkgs]] with the packages coming from repository of
+the input flake whose key is [[emacsOverlay]].
+\begin{codechunk}
+\nextchunklabel{chk:lmp188md}
+<<Define generalPackages>>=
+pkgs = import nixpkgs {
+  system = "<<System type>>";
+  overlays = [ emacsOverlay.overlay ];
+};
+@ %def pkgs
+\end{codechunk}
+%% I am using \noindent below because without it an indent appears at
+%% the beginning of the next line when the above chunk is split across
+%% two pages.
+\noindent I then pull in the general packages listed earlier from this
+augmented collection.
+\begin{codechunk}
+\nextchunklabel{chk:2zt0ipag}
+<<Define generalPackages>>=
+generalPackages = with pkgs; [ <<General packages>> ];
+@ %def generalPackages
+\end{codechunk}
+This completes the definition of the variable
+[[generalPackages]].
+
+The collection [[pkgs]] also provides the function that was used
+in code chunk \subpageref{chk:210pn37e} above to combine the
+sub-packages into the main package:
+\begin{codechunk}
+\nextchunklabel{chk:ohmjfu6s}
+<<Function for combining packages>>=
+pkgs.symlinkJoin
+@
+\end{codechunk}
+
+In the definition of the variable [[pkgs]] above, I had to
+provide the system type of my computer.  It is a name that represents
+the hardware and the operating system of the computer:
+\begin{codechunk}
+\nextchunklabel{chk:5ojbsjmz}
+<<System type>>=
+x86_64-linux
+@
+\end{codechunk}
+Supplying it to the \nwverb|import| function as above ensures that the
+resulting collection [[pkgs]] contains only the packages that are
+compatible with this system type.
+
+For the sub-package named \nwverb|texlivePackage|, I use the Nix
+packages collection from the repository of the input flake with the
+key [[nixpkgsTL]].
+\begin{codechunk}
+\nextchunklabel{chk:76nm3m2v}
+<<Define texlivePackage>>=
+pkgsTL = import nixpkgsTL { system = "<<System type>>"; };
+@ %def pkgsTL
+\end{codechunk}
+Again, I pull in the \TeX\ Live package from this collection.
+\begin{codechunk}
+\nextchunklabel{chk:38v4ek1c}
+<<Define texlivePackage>>=
+texlivePackage = pkgsTL.<<TeX Live package>>;
+@ %def texlivePackage
+\end{codechunk}
+
+As I had said in \Cref{sec:ucztoedd}, the Emacs package is assembled
+from a base package containing the Emacs editor with some other
+packages providing Emacs libraries.  I first define the base Emacs
+package to be the development version of the Emacs editor, chosen from
+the augmented collection of Nix packages that I had defined above.
+\begin{codechunk}
+\nextchunklabel{chk:uz1knimp}
+<<Define emacsPackage>>=
+emacsBase = pkgs.emacsGit;
+@ %def emacsBase
+\end{codechunk}
+This version of the Emacs editor has an associated collection of Nix
+packages that provide libraries that are compatible with it.
+\begin{codechunk}
+\nextchunklabel{chk:ol6c2u6j}
+<<Define emacsPackage>>=
+emacsLibs = pkgs.emacsPackagesFor emacsBase;
+@ %def emacsLibs
+\end{codechunk}
+I now pick the Emacs libraries that I had listed in
+\Cref{sec:ucztoedd} from the above collection, and add them to the
+base Emacs package to get the final Emacs package.
+\begin{codechunk}
+\nextchunklabel{chk:880rjlng}
+<<Define emacsPackage>>=
+emacsPackage = emacsLibs.emacsWithPackages (libs:
+  with libs; [ <<Emacs libraries>> ]);
+@ %def emacsPackage
+\end{codechunk}
+This defines the sub-package \nwverb|emacsPackage|, and completes the
+description of the Nix flake configuration file of this project.
+
+\section{The global environment of the project}
+\label{sec:t33ih64f}
+
+In this section, I will describe the files of \cref{item:bzx9u1p0} on
+\cpageref{cha:35ivgljk}.  These files fall into the following groups:
+\begin{enumerate}
+\item Files that generate other files of the project.
+\item Files related to the Git version control of the project
+\item Files related to the Direnv shell extension that I use to
+  provide an isolated environment of the project
+\item Files related to the configuration of the \nwverb|dune| build
+  system for the project
+\end{enumerate}
+I will describe these files in one subsection per item of the list.
+
+\subsection{Generating the files of the project}
+\label{sec:se9ebkbu}
+
+This section is about a shell script that generates several other
+files of the project.  The script is in a root chunk named
+\nwverb|generator-script| in the Noweb source file, and its contents
+are as follows:
+\begin{codechunk}
+\nextchunklabel{chk:id7k7vhz}
+<<generator-script>>=
+<<Test that the current directory is the project root>>
+<<Ensure that Git has been initiated for the project>>
+<<Define the function to generate a file>>
+<<Generate initial files>>
+<<Update the Nix flakes lock file>>
+<<Install Nix packages in the project environment>>
+<<Run direnv>>
+<<Generate the rest of the files>>
+@
+\end{codechunk}
+
+The generating script uses paths that are relative to the root
+directory of the project, and assumes that the script is run in that
+directory.  I therefore check at the beginning of the script that I am
+in the root directory:
+\begin{codechunk}
+\nextchunklabel{chk:gcbxeq58}
+<<Test that the current directory is the project root>>=
+test -f src/project.nw || exit $?
+@
+\end{codechunk}
+I am assuming that a file with the path \nwverb|src/project.nw| exists
+only in the root directory, and test the existence of that file.  If
+it exists, I am in the root directory, and go on with the script.  If
+it does not, I am not in the root directory, and exit with the error
+code produced by the testing command.
+
+Git is central to the project, so I now check that it has been
+configured for the project.
+\begin{codechunk}
+\nextchunklabel{chk:239jgmdm}
+<<Ensure that Git has been initiated for the project>>=
+test -d .git || git init
+@
+\end{codechunk}
+It is crude to test the existence of the directory \nwverb|.git| in
+the root directory to check that Git has been initiated for the
+project, but it is enough for me.  If the directory does not exist, I
+initiate Git.
+
+I now define the shell function that I will use to generate the files
+of the project.
+\begin{codechunk}
+\nextchunklabel{chk:k7fox8zt}
+<<Define the function to generate a file>>=
+generate() {
+  <<Define the local variables of the generator function>>
+  <<Ensure that the parent directory of the file exists>>
+  <<Generate the file>>
+}
+@ %def generate
+\end{codechunk}
+
+There are two local variables in the definition of the generator
+function.  The first of these is the name of the root chunk of the
+source whose descendant chunks will form the contents of the generated
+file.  It is the same as the path of the generated file relative to
+the project root, and is supplied as the sole argument of the
+function.
+\begin{codechunk}
+\nextchunklabel{chk:2w9bj9eu}
+<<Define the local variables of the generator function>>=
+filename="$1"
+@
+\end{codechunk}
+
+The other local variable stores the name of the parent directory of
+the file being generated.
+\begin{codechunk}
+\nextchunklabel{chk:mhvesq40}
+<<Define the local variables of the generator function>>=
+dirname="$(dirname "${filename}")"
+@
+\end{codechunk}
+This directory must be there before I generate the file, so I create
+the directory if it does not already exist:
+\begin{codechunk}
+\nextchunklabel{chk:xcoih002}
+<<Ensure that the parent directory of the file exists>>=
+test -d "${dirname}" || mkdir -p "${dirname}"
+@
+\end{codechunk}
+
+Now that everything is ready for the file, I can generate it.
+\begin{codechunk}
+\nextchunklabel{chk:sgl5emsf}
+<<Generate the file>>=
+notangle -R"${filename}" src/project.nw > "${filename}"
+@
+\end{codechunk}
+I use the \nwverb|notangle| command from Noweb to generate the file.
+The command writes the generated file to standard output, so I
+redirect the output of the command along the appropriate path.  This
+completes the definition of the function that generates a single file.
+
+I now generate some files that are needed before the rest of the
+generator script can run.  Apart from the generator script itself,
+these files are related to Git, direnv, and Nix flakes:
+\begin{codechunk}
+\nextchunklabel{chk:rs8hxv26}
+<<Initial files>>=
+.envrc .git/config .gitignore flake.nix
+@
+\end{codechunk}
+I generate them with the function I have defined above.
+\begin{codechunk}
+\nextchunklabel{chk:6rquospc}
+<<Generate initial files>>=
+for file in <<Initial files>>; do
+  generate "${file}"
+done
+@
+\end{codechunk}
+
+The flake configuration file \nwverb|flake.nix| is one of the initial
+files that I had generated above.  I now use the information in it to
+update the file \nwverb|flake.lock|.  Updating this file means that it
+is created if it does not already exist, and is recreated if it does
+exist.  Nix seems to produce errors with messages like
+``nix/store/\ldots\ no such file or directory'' if I don't add
+\nwverb|flake.nix| to Git before updating the flakes lock file
+(\href{https://discourse.nixos.org/t/nix-flakes-nix-store-source-no-such-file-or-directory/17836/11}{message}
+on the Nix forum, and
+\href{https://github.com/NixOS/nix/issues/6642#issuecomment-1153583232}{comment
+  on Issue 6642} in the Nix project's repository at GitHub).  So I add
+\nwverb|flake.nix| to Git now; while I am at it, I may as well add a
+few other important files to Git.
+\begin{codechunk}
+\nextchunklabel{chk:cpigjdve}
+<<Update the Nix flakes lock file>>=
+git add .gitignore bootstrap.sh flake.nix
+@
+\end{codechunk}
+I will describe the file \nwverb|bootstrap.sh| a bit later.  For now,
+I move on to the command for updating the lock file:
+\begin{codechunk}
+\nextchunklabel{chk:7tf2lkii}
+<<Update the Nix flakes lock file>>=
+nix flake update
+@
+\end{codechunk}
+After the lock file is updated, I add that also to Git to be on the
+safe side of Nix errors like the one I have mentioned above.
+\begin{codechunk}
+\nextchunklabel{chk:tqq79ekt}
+<<Update the Nix flakes lock file>>=
+git add flake.lock
+@
+\end{codechunk}
+
+Now I install the Nix packages provided by the flake into the project
+environment.
+\begin{codechunk}
+\nextchunklabel{chk:jklpsovg}
+<<Install Nix packages in the project environment>>=
+nix build -o .nix .#allPackage || exit $?
+@
+\end{codechunk}
+If the installation command fails, I exit with the error code produced
+by the command.
+
+At this point all the ingredients of the project have been installed.
+I now import them into the shell environment of the project using
+\nwverb|direnv|.
+\begin{codechunk}
+\nextchunklabel{chk:5td6j4bv}
+<<Run direnv>>=
+direnv allow
+@
+\end{codechunk}
+
+\begin{coderemark}
+  \label{crk:sue9d5qv}
+  In code chunks \subpageref{chk:gcbxeq58} and
+  \subpageref{chk:jklpsovg}, I use shell pipes of the form
+\begin{verbatim}
+command || exit $?
+\end{verbatim}
+  The idea is that if \nwverb|command| fails, the script should exit
+  with the error code produced by \nwverb|command|.  Initially, I
+  tried using the shell setting
+\begin{verbatim}
+set -o errexit
+\end{verbatim}
+  at the beginning of the script.  This would have made the script
+  exit with the appropriate error code as soon as a command failed.
+  The two pipes mentioned above would have been unnecessary if I had
+  used the above setting: I could have removed the \nwverb|exit $?|
+  part in each of them, and just written
+\begin{verbatim}
+command
+\end{verbatim}
+  instead of the pipe.  However, the \nwverb|git add| commands in code
+  chunks \subpageref{chk:cpigjdve} and \subpageref{chk:tqq79ekt} fail
+  if there are new or modified files that are not being added by these
+  commands; the \nwverb|errexit| setting would then abort the script
+  with an error, although the reason for the error (the presence of
+  those files) is not relevant to the script.  I therefore stopped
+  using the above setting in the script.
+\end{coderemark}
+
+Before the generator script can be used to generate the files of the
+project, it must itself be generated first.  I therefore need a
+bootstrapping command to first extract the generator script from the
+source.  The file \nwverb|bootstrap.sh| mentioned in code chunk
+\subpageref{chk:cpigjdve} contains this command:
+\begin{verbatim}
+notangle -Rgenerator-script src/project.nw | sh -
+\end{verbatim}
+The command extracts the generator script to standard output using the
+\nwverb|notangle| command that I had used earlier, and pipes that
+output as the input \nwverb|-| to a shell invocation.  So it turns out
+that I don't need to write the extracted generator script to the hard
+disk; it is enough to pass it as standard input to \nwverb|sh|.  This
+enables me to avoid keeping a file in the project directory
+unnecessarily.
+
+Of course, the file \nwverb|bootstrap.sh| must be created by hand
+first because its presence is necessary to extract all the other files
+of the project from this document.  So it is not automatically
+generated, and must be added to Git.  That is what the command in code
+chunk \subpageref{chk:cpigjdve} does.
+
+The \nwverb|notangle| command in \nwverb|bootstrap.sh| needs a Noweb
+system.  So I need Noweb to bootstrap this project.  The simplest way
+to provide this requirement is to use the Noweb package coming from
+the operating system on my computer.  It is currently Linux Mint, so
+before I bootstrap the project, I must ensure that the Linux Mint
+package \nwverb|noweb| is installed.  If it isn't, I must install it
+with the command
+\begin{verbatim}
+sudo apt install noweb
+\end{verbatim}
+
+\subsection{Git configuration for the project}
+\label{sec:e6mz5cfq}
+
+I use the Git version control system for the project.  There is not
+much configuration for this part of the project: a file with basic
+settings for Git, and a file specifying the files that should be
+ignored by Git.  To actually run Git commands, I use the Emacs
+interface to Git that is called Magit.
+
+The basic settings for Git just specify the name and the email address
+that are used in Git commits.  In addition, there is a Git setting to
+show files in directories that are not tracked by Git in the output of
+the \nwverb|git status| command.  With this last setting, Magit shows
+untracked directories in the status buffer.  These directory sections
+can then be expanded using the \nwverb|TAB| key.
+\begin{codechunk}
+\nextchunklabel{chk:32wdnys9}
+<<.git/config>>=
+[user]
+name = Raghavendra Nyshadham
+email = rn@raghnysh.com
+[status]
+showUntrackedFiles = all
+@
+\end{codechunk}
+
+The list of files to be ignored by Git is very small because the
+\nwverb|dune| build system that I use for the project does not clutter
+the source directories with generated artifacts.  Here is the entire
+content of the file \nwverb|.gitignore|:
+\begin{codechunk}
+\nextchunklabel{chk:jrwip7cx}
+<<.gitignore>>=
+*~
+.emacs.d/
+.envrc
+.nix
+_build/
+auto/
+dune-project
+src/dune
+@
+\end{codechunk}
+This is just a list of names of files.  All these files are generated
+by the tools that I use to work on the project, and hence should be
+kept out of version control.
+
+I ignore all files with names that match the pattern \nwverb|*~|
+because these are just backup files that are created by Emacs and not
+by me.  Similarly, the files in the directory \nwverb|.emacs.d/| in
+the root directory of the project are generated by Emacs or the Noweb
+system, and should be ignord by Git.  The file \nwverb|.nix| is the
+symbolic link that is created in the top directory of the project by
+the \nwverb|nix-build| command.  The subdirectory \nwverb|_build/| in
+the top directory of the project contains the artifacts created by the
+\nwverb|dune| build system.  The Emacs package AUCTeX that I use to
+edit \LaTeX\ files creates directories named \nwverb|auto/| to store
+information about these files.  The files named \nwverb|dune-project|
+and \nwverb|dune| are generated by Noweb.
+
+\subsection{Direnv configuration}
+\label{sec:f6493iaa}
+
+I use the Direnv shell extension \parencite{bib:x4lpeuud} to create an
+isolated environment for the project.  Its configuration is contained
+in a small file \nwverb|.envrc| in the top directory of the project.
+\begin{codechunk}
+\nextchunklabel{chk:inw0gsmr}
+<<.envrc>>=
+<<Direnv settings related to Nix packages>>
+<<Direnv settings related to LaTeX>>
+@
+\end{codechunk}
+The file contains a few settings related to Nix packages and \LaTeX.
+
+The \nwverb|nix build| command run when bootstrapping the project
+(\Cref{sec:se9ebkbu}) creates a symbolic link to a directory
+containing the Nix packages that are installed in the project.  I add
+the paths of these packages to the project environment.
+\begin{codechunk}
+\nextchunklabel{chk:avq9nqi6}
+<<Direnv settings related to Nix packages>>=
+PATH_add .nix/bin
+MANPATH_add .nix/share/man
+@
+\end{codechunk}
+
+The other Direnv setting related to Nix packages is an environment
+variable pointing to the location of the data files of the Nix package
+\nwverb|glibcLocales| that was mentioned in \Cref{sec:ucztoedd}.
+\begin{codechunk}
+\nextchunklabel{chk:q8vtdo56}
+<<Direnv settings related to Nix packages>>=
+export LOCALE_ARCHIVE=$(realpath ".nix/lib/locale/locale-archive")
+@
+\end{codechunk}
+
+There is only one Direnv setting related to LaTeX.  It tells the
+\nwverb|kpathsea| tool of \TeX\ Live where to look for \TeX\ files
+such as \LaTeX\ style files.  Here I specify the location of the
+\LaTeX\ package for Noweb because that location is not added to the
+\nwverb|kpathsea| database when the Nix package for Noweb is installed
+(\Cref{sec:ucztoedd}).
+\begin{codechunk}
+\nextchunklabel{chk:8vulezsq}
+<<Direnv settings related to LaTeX>>=
+export TEXINPUTS="$(realpath .nix/share/texmf/tex/latex/noweb)//:"
+@
+\end{codechunk}
+The double backslash \nwverb|//| tells \nwverb|kpathsea| to also look
+in all descendant subdirectories of the specified directory when
+searching for files.  The trailing colon \nwverb|:| says that the
+default search path of \nwverb|kpathsea| should be appended to the
+above path.  Without the trailing colon, the tool will look only in
+the above path and fail to find most of the required files, which will
+lead to the failure of the \LaTeX\ process.
+
+\subsection{Dune configuration for the project}
+\label{sec:ci381m0z}
+
+I use the \nwverb|dune| build system \parencite{bib:kr1beubb} to
+perform various operations in the project.  This section describes the
+configuration of this build system for the project.
+
+\subsubsection{Dune project file}
+\label{sec:cwuh94qm}
+
+The main configuration file for \nwverb|dune| is the file
+\nwverb|dune-project| in the root directory of the project.  This file
+marks the root of the \nwverb|dune| project, and contains the
+project-wide \nwverb|dune| parameters.  The file consists of
+S-expressions which are called ``stanzas'' in the \nwverb|dune|
+documentation.  In this project, the file contains just one stanza:
+\begin{codechunk}
+\nextchunklabel{chk:32ogrjm7}
+<<dune-project>>=
+(lang dune 3.3)
+@
+\end{codechunk}
+This stanza declares the version of the \nwverb|dune| language that is
+used by the \nwverb|dune| files in the project.  If there are other
+stanzas in this file, they must follow the language stanza: the
+language stanza must be the first one in the \nwverb|dune-project|
+file.  Having specified the contents of the file, I add a command to
+the generator script to generate this file:
+\begin{codechunk}
+\nextchunklabel{chk:alahliof}
+<<Generate the rest of the files>>=
+generate dune-project
+@
+\end{codechunk}
+
+\subsubsection{Dune file for building PDF output}
+\label{sec:zhsgt2hc}
+
+In addition to the above \nwverb|dune-project| file, the \nwverb|dune|
+system requires a file named \nwverb|dune| in every directory of the
+project where \nwverb|dune| has to perform a build task.  For example,
+here is the \nwverb|dune| file in the directory that contains the
+source file of the current Noweb document:
+\begin{codechunk}
+\nextchunklabel{chk:mpt7772n}
+<<src/dune>>=
+<<Rule for building PDF output>>
+@
+\end{codechunk}
+It contains just one stanza, a \nwverb|rule| stanza that tells
+\nwverb|dune| how to build the PDF output from the Noweb source.  The
+above specification of the content of the Dune file is accompanied by
+a command asking the generator script of \Cref{sec:se9ebkbu} to
+generate the file.
+\begin{codechunk}
+\nextchunklabel{chk:hy06nki5}
+<<Generate the rest of the files>>=
+generate src/dune
+@
+\end{codechunk}
+
+The rule for building the PDF output has the following form.
+\begin{codechunk}
+\nextchunklabel{chk:a409joll}
+<<Rule for building PDF output>>=
+(rule
+  <<Alias for the rule for building PDF output>>
+  <<Dependencies of the PDF output>>
+  <<Action for building the PDF output>>)
+@
+\end{codechunk}
+
+I give the above rule an \nwverb|alias| which can be used in the
+\nwverb|dune| command for building PDF output.
+\begin{codechunk}
+\nextchunklabel{chk:bbeoaaxf}
+<<Alias for the rule for building PDF output>>=
+(alias pdf)
+@
+\end{codechunk}
+I can now run the command
+\begin{verbatim}
+dune build @pdf
+\end{verbatim}
+in the root directory of the project to build the PDF output.
+
+The PDF output depends on the Noweb source, and the \nwverb|biblatex|
+bibliography database.
+\begin{codechunk}
+\nextchunklabel{chk:v6ix6nyn}
+<<Dependencies of the PDF output>>=
+(deps (:nwfile project.nw) project.bib)
+@
+\end{codechunk}
+For convenience and to avoid repeating the file name, I give the Noweb
+source file dependency a name, namely \nwverb|nwfile|, so that I can
+refer to it as \nwverb|%{nwfile}| in later stanzas.
+
+The actual commands for producing the PDF output are specified in the
+\nwverb|action| stanza of the \nwverb|rule|:
+\begin{codechunk}
+\nextchunklabel{chk:1w22p836}
+<<Action for building the PDF output>>=
+(action
+  (progn
+    <<Extract the LaTeX style file>>
+    <<Extract the LaTeX source file>>
+    <<Run latexmk on the LaTeX source file>>
+    <<Fix the source file name for synctex>>))
+@
+\end{codechunk}
+The \nwverb|progn| stanza says that the action is a sequence of
+several commands that must be run in the given order.
+
+The first command in the sequence extracts the \LaTeX\ style file for
+the document using the \nwverb|notangle| utility of the Noweb system.
+The utility prints the style file to standard output; the
+\nwverb|with-stdout-to| stanza redirects the standard output to the
+specified file.
+\begin{codechunk}
+\nextchunklabel{chk:8lto3973}
+<<Extract the LaTeX style file>>=
+(with-stdout-to project.sty
+  (run notangle -Rproject.sty %{nwfile}))
+@
+\end{codechunk}
+
+The stanza specifying the extraction of the \LaTeX\ source file from
+the Noweb source is similar to the above stanza, except that it uses
+the \nwverb|noweave| utility instead of \nwverb|notangle|.
+\begin{codechunk}
+\nextchunklabel{chk:w3o1d6og}
+<<Extract the LaTeX source file>>=
+(with-stdout-to project.tex
+  (run noweave -delay -index %{nwfile}))
+@
+\end{codechunk}
+
+The next step in the sequence of commands is the execution of the
+\nwverb|latexmk| program on the \LaTeX\ source file that is extracted
+as specified above.
+\begin{codechunk}
+\nextchunklabel{chk:4psd50n0}
+<<Run latexmk on the LaTeX source file>>=
+(run latexmk -pdf -file-line-error -halt-on-error
+  -interaction=nonstopmode -synctex=1 project.tex)
+@
+\end{codechunk}
+It runs \nwverb|latexmk| with the specified options.  The option
+\nwverb|-pdf| says that the \LaTeX\ input file must be processed with
+\nwverb|pdflatex|, which produces PDF output; without this option,
+\nwverb|latexmk| will process the file with \nwverb|latex|, which
+produces DVI output.  The option \nwverb|-file-line-error| asks the
+\nwverb|pdflatex| program to print error messages in the form
+\nwverb|file:line:error|.  The option \nwverb|-halt-on-error| means
+that \nwverb|pdflatex| will exit with an appropriate exit code if
+processing the file results in an error.  I use the option
+\nwverb|-interaction=nonstopmode| to tell \nwverb|pdflatex| not to
+stop for any reason; if there is any error, I will find it in the log
+file produced by the program.  The option \nwverb|-synctex=1| asks
+\nwverb|pdflatex| to produce a file named \nwverb|project.synctex.gz|,
+which can be used for navigation between the source \LaTeX\ file and
+the PDF output file.
+
+The final command in the processing sequence fixes the name of the
+source file in the file \nwverb|project.synctex.gz| so that navigation
+is in fact between the Noweb (not \LaTeX) source file and the PDF
+output file.
+\begin{codechunk}
+\nextchunklabel{chk:7segh4be}
+<<Fix the source file name for synctex>>=
+(system
+  "cp project.synctex.gz project.synctex.orig.gz \
+   && gunzip -c project.synctex.orig.gz \
+   | sed 's@_build/default/src/\\./project\\.tex@src/project.nw@' \
+   | gzip \
+   > project.synctex.gz")
+@
+\end{codechunk}
+\noindent This command backs up the synctex file, uncompresses it,
+substitutes the path of the \LaTeX\ file with that of the Noweb file,
+and recompresses the synctex file.  This completes the description of
+the Dune file producing the PDF output from the Noweb source.
+
+\section{The \LaTeX\ style file for the project}
+\label{sec:gbc4bxd4}
+
+In this section, I will describe the \LaTeX\ style file for
+typesetting the documentation of the project, that is to say, for
+typesetting this file.  I use the standard \LaTeX\ document class
+\nwverb|report| for the documentation.  The \nwverb|book| class is too
+formal for the things that I write, while the \nwverb|article| class
+does not provide divisions for \nwverb|chapter| and \nwverb|part| that
+I need.  Under these circumstances, the \nwverb|report| class is a
+good fit for my requirements.  The style file that is described here
+adds some light customisation to this base document class.
+
+In the following subsections of this section, except for the final
+one, I will describe various aspects of the \LaTeX\ style file.  In
+the last subsection, I will describe a few \LaTeX\ features of this
+Noweb source file.
+
+\subsection{The structure of the style file}
+\label{sec:m3nh5q94}
+
+\begin{codechunk}
+\nextchunklabel{chk:uprkl241}
+<<project.sty>>=
+<<Preamble of the LaTeX style file>>
+<<Font setup for LaTeX>>
+<<Page layout>>
+\RequirePackage { fancyhdr }
+\RequirePackage { marginnote }
+\pagestyle { fancy }
+\fancyhf {}
+\cs_gset:cpn { headrulewidth }
+  {
+    0 mm
+  }
+\cs_gset:cpn { footrulewidth }
+  {
+    0 mm
+  }
+\fancyhead [ CO ]
+  {
+    \marginnote
+      {
+        \leftmark
+        \\ [ -1 mm ]
+        \textcolor { LightSlateGray }
+          {
+            \rule { \marginparwidth } { 0.2 mm }
+          }
+        \\
+        \smallskip
+        \thepage
+      }
+      [ 5.08 mm ]
+  }
+\fancyhead [ CE ]
+  {
+    \reversemarginpar
+    \marginnote
+      {
+        \rightmark
+        \\ [ -1 mm ]
+        \textcolor { LightSlateGray }
+          {
+            \rule { \marginparwidth } { 0.2 mm }
+          }
+        \\
+        \smallskip
+        \thepage
+      }
+      [ 5.08 mm ]
+  }
+\cs_gset:cpn { raggedrightmarginnote }
+  {
+    \centering
+  }
+\cs_gset:cpn { chaptermark } #1
+  {
+    \markboth
+      {
+        \textit { Chapter ~ \thechapter \\ \smallskip #1 }
+      }
+      {}
+  }
+\cs_gset:cpn { sectionmark } #1
+  {
+    \markright
+      {
+        \textit { \S \thesection \\ \smallskip #1 }
+      }
+  }
+\RequirePackage { titling }
+\posttitle
+  {
+    \par
+    \end { center }
+    \bigskip
+  }
+\postauthor
+  {
+    \end{ tabular }
+    \par
+    \end{ center }
+    \bigskip
+  }
+\predate
+  {
+    \par
+    \bigskip
+    \begin { center }
+    \large
+  }
+\NewDocumentCommand \ghtopics
+  { m }
+  {
+    \hypersetup { pdfkeywords = {#1} }
+    \par
+    \medskip
+    \textit{GitHub ~ topics}: ~
+    \clist_set:cn { l_tmpa_clist } {#1}
+    \clist_clear:c { l_tmpb_clist }
+    \clist_map_inline:cn { l_tmpa_clist }
+      {
+        \clist_put_right:cn { l_tmpb_clist }
+          {
+            \hrefurl { https://github.com/topics/##1 } {##1}
+          }
+      }
+    \clist_use:cn { l_tmpb_clist } { , ~ }
+  }
+\NewDocumentEnvironment { frontpage }
+  {}
+  {
+    \newgeometry
+      {
+        top = 25 mm,
+        bottom = 25 mm,
+        left = 25 mm,
+        right = 25 mm,
+        bindingoffset = 0 mm,
+        headheight = 0 mm,
+        headsep = 0 mm,
+        includehead = true
+      }
+    \begin{titlingpage}
+  }
+  {
+    \end{titlingpage}
+    \restoregeometry
+    \stepcounter{page}
+  }
+\RequirePackage { tocloft }
+\tocloftpagestyle { empty }
+\NewDocumentCommand \notessection
+  { O{Notes} }
+  {
+    \phantomsection
+    \addcontentsline { toc }{ section } {#1}
+    \markright
+      {
+        \textit { \@chapapp ~ \thechapter ~ #1 }
+      }
+    \section* {#1}
+  }
+\numberwithin { equation } { section }
+\numberwithin { equation } { section }
+\cs_gset:cpn { theequation }
+  {
+    \int_compare:nNnTF
+      { \value { section } }
+      >
+      { 0 }
+      { \thesection \alph { equation } }
+      {
+        \int_compare:nNnTF
+          { \value { chapter } }
+          >
+          { 0 }
+          { \thechapter \alph { equation } }
+          { \arabic { equation } }
+      }
+  }
+\RequirePackage { noweb }
+\cs_gset:cpn { nwmargintag } #1
+  {
+    \group_begin:
+    \leavevmode
+    \kern -\codemargin
+    #1.
+    \kern \codemargin
+    \group_end:
+  }
+\cs_gset:cpn { nwalsodefined } #1
+  { \scan_stop: }
+\cs_gset:cpn { nwused } #1
+  { \scan_stop: }
+\cs_gset:cpn { nwnotused } #1
+  { \scan_stop: }
+\cs_gset:cpn { nwidentuses } #1
+  { \scan_stop: }
+\cs_gset:cpn { nwidentdefs } #1
+  { \scan_stop: }
+\noweboptions
+  {
+    breakcode,
+    smallcode
+  }
+\NewDocumentCommand \nwverb
+  { v }
+  {
+    \code #1 \edoc
+  }
+\NewDocumentCommand \nowebchunkssection
+  { O{List ~ of ~ code ~ chunks} }
+  {
+    \phantomsection
+    \addcontentsline { toc }{ chapter } {#1}
+    \markboth {} { \textsc{ #1 } }
+    \chapter* {#1}
+    \nowebchunks
+  }
+\NewDocumentCommand \nowebindexsection
+  { O{Index ~ of ~ identifiers} }
+  {
+    \phantomsection
+    \addcontentsline { toc }{ chapter } {#1}
+    \markboth {} { \textsc{ #1 } }
+    \chapter* {#1}
+    \nowebindex
+  }
+\RequirePackage [ svgnames ]{ xcolor }
+\RequirePackage { tcolorbox }
+\tcbuselibrary
+  {
+    breakable,
+    skins
+  }
+\newtcolorbox { codechunk }
+  {
+    after = ,
+    breakable = true,
+    colback = blue!4!white,
+    colframe = tcbcolback,
+    enhanced = true,
+    interior ~ style = fill,
+    sharp ~ corners,
+    size = minimal,
+    top = 4 pt
+  }
+\tcolorboxenvironment { verbatim }
+  {
+    after = \par\noindent,
+    breakable = true,
+    colback = black!4!white,
+    colframe = tcbcolback,
+    enhanced = true,
+    fontupper = \small,
+    interior ~ style = fill,
+    sharp ~ corners,
+    size = small
+  }
+\RequirePackage
+  [
+    alldates = iso,
+    backref = true,
+    backrefstyle = none,
+    block = par,
+    seconds = true,
+    style = authoryear
+  ]
+  { biblatex }
+\renewbibmacro { pageref }
+  {
+    \iflistundef { pageref }
+      {
+        \printtext
+          [ parens ]
+          { not ~ cited }
+      }
+      {
+        \printtext
+          [ parens ]
+          {
+            \ifnumgreater { \value { pageref } } {1}
+              {
+                \bibstring { backrefpages }
+                \ppspace
+              }
+              {
+                \bibstring { backrefpage }
+                \ppspace
+              }
+            \printlist
+              [ pageref ]
+              [ - \value { listtotal } ]
+              { pageref }
+          }
+      }
+  }
+\DefineBibliographyStrings
+  { english }
+  {
+    backrefpage = { cited ~ on ~ p \adddot },
+    backrefpages = { cited ~ on ~ pp \adddot },
+    urlseen = { seen }
+  }
+\NewDocumentCommand \bibsection
+  { O{References} }
+  {
+    \phantomsection
+    \printbibliography
+      [
+        heading = bibintoc,
+        title = #1
+      ]
+    \markboth { \textit{ #1 } } { \textit{ #1 } }
+  }
+\dim_gset:cn { bibitemsep } { 2 \itemsep }
+\RequirePackage { xurl }
+\urlstyle { same }
+\RequirePackage [ numbered ]{ bookmark }
+\RequirePackage { hyperref }
+\hypersetup { hypertexnames = false }
+\hypersetup { colorlinks = true }
+% https://tex.stackexchange.com/a/632828
+\hypersetup { allcolors = blue!80!white }
+\hypersetup { pdflang = { en } }
+\RequirePackage { cleveref }
+\declaretheorem
+  [
+    parent = section,
+    style = definition
+  ]
+  { definition }
+\declaretheorem
+  [
+    sibling = definition,
+    style = remark
+  ]
+  { remark }
+\declaretheorem
+  [
+    name = Code ~ Remark,
+    Refname = Code ~ Remark,
+    refname = code ~ remark,
+    sibling = definition,
+    style = remark
+  ]
+  { coderemark }
+\declaretheorem
+  [
+    Refname = Notation,
+    refname = notation,
+    sibling = definition,
+    style = remark
+  ]
+  { notation }
+\NewDocumentEnvironment { interjection }
+  {}
+  {
+    \group_begin:
+    \footnotesize
+  }
+  {
+    \group_end:
+  }
+\NewDocumentEnvironment { question }
+  { O{} }
+  {
+    \par
+    \smallskip
+    \noindent
+    \IfValueT {#1} { \textbf {#1}. }
+  }
+  {
+    \par
+    \smallskip
+  }
+\NewDocumentEnvironment { answer }
+  { O{} }
+  {
+    \par
+  }
+  {
+    \par
+    \smallskip
+  }
+\NewDocumentCommand \firstterm
+  { m }
+  {
+    \emph {#1}
+  }
+@
+\end{codechunk}
+
+\subsection{Preamble of the style file}
+\label{sec:20hr2p4h}
+
+The \LaTeX\ style file of the project begins with a preamble that
+specifies the general features of the package that is defined by it.
+
+The first declaration of the preamble says that the style file needs
+the \LaTeXe\ format of \TeX, as opposed to the old and seldom-used
+format \LaTeX\ 2.09.
+\begin{codechunk}
+\nextchunklabel{chk:cga928s2}
+<<Preamble of the LaTeX style file>>=
+\NeedsTeXFormat{LaTeX2e}
+@
+\end{codechunk}
+
+The only other declaration in the preamble says that the current file
+provides the \LaTeX\ package \nwverb|project|, and specifies the date
+and version of the package.  It also provides a short description of
+the package for use in output messages and log files.  For the
+version, I will use a semantic version number
+\parencite{bib:rgn083uu}.
+\begin{codechunk}
+\nextchunklabel{chk:bvcrtfel}
+<<Preamble of the LaTeX style file>>=
+\ProvidesExplPackage
+  {project}
+  {2023-03-06}
+  {0.1.0}
+  {LaTeX style for project documentation}
+@
+\end{codechunk}
+\noindent The \nwverb|ProvidesExplPackage| command loads the \LaTeX\
+package \nwverb|expl3|, which provides a programming interface to
+\LaTeX3\ from \LaTeXe; see \textcites{bib:mkhhh0pm}{bib:uzoxi4r1}.  I
+will use the \nwverb|expl3| syntax in all the code in this package.
+
+\subsection{Fonts for the documentation}
+\label{sec:ebsafu80}
+
+I use the version of the Palatino fonts that is provided by the
+\LaTeX\ package \nwverb|newpxtext| \parencite{bib:8ouv42ct} as the
+default font for the documenation.  This means that it is the font for
+everything other than mathematics and matter that must be typeset in
+typewriter font (such as program code).
+\begin{codechunk}
+\nextchunklabel{chk:l41deaat}
+<<Font setup for LaTeX>>=
+\RequirePackage { newpxtext }
+@
+\end{codechunk}
+
+For stuff, such as code, that must be presented in typewriter font, I
+use the Inconsolata font from the package \nwverb|inconsolata|
+\parencite{bib:rm8xhdtp}.  I scale down this font to 95\% of its
+normal size, so that it matches the size of the default font.
+\begin{codechunk}
+\nextchunklabel{chk:42si5tgh}
+<<Font setup for LaTeX>>=
+\RequirePackage [ scaled = 0.95 ] { inconsolata }
+@
+\end{codechunk}
+I learnt about the Inconsolata font from an
+\href{https://tex.stackexchange.com/a/660320}{answer} by Enrico
+Gregorio (user \nwverb|egreg|) to a question on the \TeX\ Stack
+Exchange.
+
+I use the version of the Palatino font from the package
+\nwverb|newpxmath| \parencite{bib:8ouv42ct} to typeset mathematical
+content.  However, before I load this package, I must load some AMS
+\LaTeX\ packages and the \nwverb|thmtools| package; I will describe
+the reasons and the commands for this later, in the subsection on
+typesetting theorems (\Cref{sec:g6qd059s}).
+\begin{codechunk}
+\nextchunklabel{chk:yjyrbroy}
+<<Font setup for LaTeX>>=
+<<Load AMS and thmtools packages>>
+\RequirePackage [ vvarbb ] { newpxmath }
+@
+\end{codechunk}
+The option \nwverb|vvarbb| of the \nwverb|newpxmath| package specifies
+that fonts from the STIX project \parencite{bib:3pidxinx} should be
+used for blackboard bold text.  According to the \nwverb|newpxmath|
+documentation \parencite{bib:8ouv42ct}, the resulting blackboard bold
+symbols are ``sharp and quite clear, geometric in design''.
+
+\subsection{Page layout of the documentation}
+\label{sec:z6f9xdlr}
+
+By the page layout, I mean parameters such as the height and width of
+the paper of the documentation, and the size of the page margins.  As
+is common, I specify these parameters as options to the
+\nwverb|geometry| package \parencite{bib:7q9hsuqp}.
+\begin{codechunk}
+\nextchunklabel{chk:fs9u7sza}
+<<Page layout>>=
+\RequirePackage [
+  <<Paper dimensions>>,
+  <<Page margins>>,
+  <<Head and foot dimensions>>,
+  <<Two-sidedness>>
+]
+  { geometry }
+@
+\end{codechunk}
+
+I will be reading electronic documents mostly on my tablet, which is
+currently an ipad Air that I bought several years ago.  So I want to
+set the width and height of the paper to fit the display size of that
+iPad Air.  Here is how I calculated the dimensions of the actual
+display, excluding the black bezel.  According to the technical
+specifications page for the tablet \parencite{bib:6zaybbon} at the
+Apple web site, it has a 2048-by-1536 resolution at 264 pixels per
+inch (ppi).  Therefore, the height of the actual display is 2048/264
+inches, that is, 197.0424 millimetres, where I use the conversion
+factor of 25.4 millimetres per inch.  Similarly, the width of the
+actual display is 1536/264 inches, that is, 147.7818 millimetres.
+\begin{codechunk}
+\nextchunklabel{chk:dmb8j83v}
+<<Paper dimensions>>=
+paperheight = 197.0424 mm,
+paperwidth = 147.7818 mm
+@
+\end{codechunk}
+
+For the remaining page layout settings, I have used the ebook
+dimensions from the HoTT book source repository
+\parencite{bib:zp078m5d} as a guide.  The file
+\nolinkurl{opt-ebook.tex} in that repository specifies all the margins
+of the ebook to be 0.2 inches, that is, 5.08 millimetres.  I will use
+this value for the top, left, and bottom margins.
+\begin{codechunk}
+\nextchunklabel{chk:u7xu3488}
+<<Page margins>>=
+top = 5.08 mm,
+left = 5.08 mm,
+bottom = 5.08 mm,
+@
+\end{codechunk}
+
+As for the right margin, the HoTT ebook has running information such
+as the chapter or section title, and the page number, at the top of
+the page, whereas I put them on the right side of the page in this
+document.  So I have to modify the right margin setting of the HoTT
+ebook to suit this document.  Let $p_h$ and $r_h$ denote the values in
+millimetres of the paper-width and the right margin, respectively, of
+the HoTT ebook.  Let $p$ denote the value in millimetres of the
+paper-width of this document.  I then specify $r$, the value in
+millimetres of the right margin of this document, by setting
+\begin{equation}
+  \label{eq:qcum56za}
+  r = r_h + p - p_h = 5.08 + 147.7818 - 121.92 = 30.9418.
+\end{equation}
+I got the values $r_h$ and $p_h$ from the file
+\nolinkurl{opt-ebook.tex} that I had mentioned above; that file
+specifies $r_h$ to be 0.2 inches or 5.08 millimetres, and $p_h$ to be
+4.8 inches or 121.92 millimetres.  I took the value $p$ in the
+definition of $r$ from code chunk \subpageref{chk:dmb8j83v}.  I have
+now arrived at the following setting for the right margin.
+\begin{codechunk}
+\nextchunklabel{chk:iuw7355e}
+<<Page margins>>=
+right = 30.9418 mm,
+@
+\end{codechunk}
+
+\begin{remark}
+  \label{rem:ubwoq7yq}
+  The above specification of the right margin of this document implies
+  that the text-width of this document equals the text-width of the
+  HoTT ebook.  Let $p$, $t$, $l$, and $r$ denote the values in
+  millimetres of the paper-width, text-width, left margin, and right
+  margin, respectively, of this document.  Denote by $p_h$, $t_h$,
+  $l_h$, and $r_h$ denote the values in millimetres of the
+  paper-width, text-width, left margin, and right margin,
+  respectively, of the HoTT ebook.  According to the manual of the
+  \nwverb|geometry| package \parencite[][Section~3]{bib:7q9hsuqp},
+  \begin{equation}
+    \label{eq:w5891hay}
+    p = t + l + r,
+    \qquad
+    p_h = t_h + l_h + r_h.
+  \end{equation}
+  These relations and equation (\ref{eq:qcum56za}) imply that
+  \begin{displaymath}
+    t = p - l - r = p_h - r_h - l = t_h + l_h - l.
+  \end{displaymath}
+  Now as I had said above code chunk \subpageref{chk:u7xu3488}, I
+  specify the left margin of this document to be the same as that of
+  the HoTT ebook, so $l = l_h$.  Thus, the above equation reduces to
+  \begin{displaymath}
+    t = t_h,
+  \end{displaymath}
+  as I have claimed.  Just in case I need it later, equation
+  (\ref{eq:w5891hay}) and the earlier settings give the value
+  \begin{displaymath}
+    t = p - l - r = 147.7818 - 5.08 - 30.9418 = 111.76
+  \end{displaymath}
+  in millimetres of the common text-width of this document and the
+  HoTT ebook.
+\end{remark}
+
+\begin{interjection}
+  The \LaTeX\ log files show the dimensions set by the
+  \nwverb|geometry| package in units of points.  According to the
+  \TeX{}book \parencite[Chapter~10]{bib:jp6ddev9}, one inch equals
+  72.27 points.  Thus, for example, the log file of this document says
+  that its text-width is 317.98799 points, which is the same as
+  $(317.98799/72.27) \times 25.4$ or 111.76 millimetres as in
+  \Cref{rem:ubwoq7yq} above.
+\end{interjection}
+
+There is one more \nwverb|geometry| setting that is related to the
+four margins.  The dimension \nwverb|bindingoffset| adds the specified
+length to the left margin to provide space for binding or stapling a
+printed version of the document.  I intend to use the current document
+purely for reading on a screen, and will not be printing it.  So the
+binding offset is unnecessary here, and I set it to zero.
+\begin{codechunk}
+\nextchunklabel{chk:u8cpgapg}
+<<Page margins>>=
+bindingoffset = 0 mm
+@
+\end{codechunk}
+
+The next group of dimensions are those of the running text (such as
+chapter or section titles, and page numbers) at the top and the bottom
+of each page of the document.  The value \nwverb|headheight| is the
+height of the header (the running text at the top of the page) and the
+value \nwverb|headsep| is the vertical distance between the header and
+the main text \parencite[see][Section~3]{bib:7q9hsuqp}.  I don't have
+any headers in this document because I am using the right margin for
+the running text.  So I tried to set both \nwverb|headheight| and
+\nwverb|headsep| to zero, but then the package \nwverb|fancyhdr| which
+I will pull in later (in \Cref{sec:25re39m7}) to arrange the running
+text produces a warning saying that a \nwverb|headheight| of 0 points
+is too small, and asking me to increase it to at least 12 points.
+That's what I am doing here:
+\begin{codechunk}
+\nextchunklabel{chk:wbqnqmlo}
+<<Head and foot dimensions>>=
+headheight = 12 pt,
+headsep = 0 mm,
+@
+\end{codechunk}
+
+Similarly, the dimension \nwverb|footskip| is the distance between the
+baseline of the last line of the main text and the base line of the
+footer (the running text at the bottom of the page).  Again because I
+don't have any footers in this document, I tried setting
+\nwverb|footskip| to zero, but got a \nwverb|fancyhdr| warning asking
+me to set it to at least 3.60004 points.
+\begin{codechunk}
+\nextchunklabel{chk:l4452msv}
+<<Head and foot dimensions>>=
+footskip = 3.60004 pt
+@
+\end{codechunk}
+
+The two-sidedness settings are related to the treatment of verso and
+recto pages of the document.  A printed document, such as a book,
+consists of trimmed sheets of paper called \emph{leaves}; the
+untrimmed sheets of paper are called \emph{stock} sheets
+\parencite[Terminology]{bib:h6qjx0z8}.  A leaf has two sides, each of
+which is called a \emph{page}.  If I open a book flat, I can see a
+page each from two leaves; the page on the left is called the
+\emph{verso} page of the leaf to which it belongs, and the page on the
+right is called the \emph{recto} page of the leaf to which it belongs.
+So one of the two pages of a leaf is its verso page, and the other is
+its recto page.  If the pages of the book are numbered as usual, then
+the verso pages are the even-numbered pages, and the recto pages are
+the odd-numbered pages.
+
+Now, as I have said earlier, I want to read this document only on a
+screen, and won't be printing it.  So the verso-recto distinction
+should be irrelevant here.  However, I do want different running
+information on verso and recto pages, so I do want to tell the \LaTeX\
+processor to treat verso and recto pages differently.  The typical way
+to do this is to pass an appropriate option to the \nwverb|geometry|
+package.
+
+The \nwverb|geometry| package provides two options which specify that
+verso and recto pages should be treated differently.  The option
+\nwverb|twoside| sets the left margin to the value of \nwverb|right|
+and the right margin to the value of \nwverb|left| on verso pages,
+sets the left margin to the value of \nwverb|left| and the right
+margin to the value of \nwverb|right| on recto pages, and prints
+margin notes in the left margin on verso pages and in the right margin
+on recto pages.  So with the settings above, this option will produce
+verso pages with a left margin of 30.9418 millimetres, a right margin
+of 5.08 millimetres, and margin notes in the left margin; it will
+produce recto pages with a left margin of 5.08 millimetres, a right
+margin of 30.9418 millimetres, and margin notes in the right margin.
+However, I want all pages, recto and verso, to have the latter
+settings.  So the \nwverb|twoside| option does not work for me.
+
+The other \nwverb|geometry| option related to the treatment of verso
+and recto pages does almost what I want.  This option is named
+\nwverb|asymmetric|.  It sets the left margin to the value of
+\nwverb|left| and the right margin to the value of \nwverb|right| on
+verso and recto pages, and prints margin notes in the left margin on
+verso pages and in the right margin on recto pages.  So with the
+settings above, this option will produce verso pages with a left
+margin of 5.08 millimetres, a right margin of 30.9418 millimetres, and
+margin notes in the left margin; it will produce recto pages with a
+left margin of 5.08 millimetres, a right margin of 30.9418
+millimetres, and margin notes in the right margin.  This is almost
+what I want: the only problem is that on verso pages the margin notes
+are in the left margin, whereas I want them in the right margin.  This
+problem can be solved with the command \nwverb|\reversemarginpar| when
+I am putting a margin note on a verso page.  To check if I am on a
+verso page is not that simple, as I learnt from an
+\href{https://tex.stackexchange.com/a/6193}{answer} by Will Robertson
+to a question on the \TeX\ Stack Exchange.  However, in my case, I
+will need to use \nwverb|reversemarginpar| only in a
+\nwverb|\fancyhead[CE]| command in \Cref{sec:25re39m7}, where the
+option \nwverb|E| for even-numbered pages ensures that I am on a verso
+page when the \nwverb|reversemarginpar| command is executed.
+\begin{codechunk}
+\nextchunklabel{chk:vk7vualh}
+<<Two-sidedness>>=
+asymmetric = true
+@
+\end{codechunk}
+
+\subsection{Running information on pages}
+\label{sec:25re39m7}
+
+
+
+\subsection{Typesetting theorems}
+\label{sec:g6qd059s}
+
+\begin{codechunk}
+\nextchunklabel{chk:6w4kiuds}
+<<Load AMS and thmtools packages>>=
+\RequirePackage [ leqno ] { amsmath }
+\RequirePackage { amsthm }
+\RequirePackage { thmtools }
+@
+\end{codechunk}
+
+\section{.emacs.d/init.el}
+\label{sec:nfptbrsf}
+
+<<.emacs.d/init.el>>=
+;; auto-save-visited-mode
+(setopt auto-save-visited-interval 2)
+(auto-save-visited-mode 1)
+
+;; auto-revert-mode
+(setopt auto-revert-interval 2)
+(global-auto-revert-mode 1)
+
+;; tabs vs spaces
+(setq-default indent-tabs-mode nil)
+
+;; auto-fill-mode
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
+
+;; compilation
+
+(setq-default compilation-scroll-output 'first-error)
+
+(setq my-compilation-frame-name "compilation")
+
+(add-to-list 'display-buffer-alist
+             `(,(rx (and string-start "*compilation*" string-end))
+               (display-buffer-reuse-window
+                display-buffer-pop-up-frame)
+               (reusable-frames . t)
+               (pop-up-frame-parameters
+                .
+                ((name . ,my-compilation-frame-name)
+                 (height . 20)
+                 (width . 80)
+                 (top . (- 0))
+                 (left . (- 0))))))
+
+(defun my-delete-compilation-frame (buffer message)
+  (let* ((successful (string-match "\\bfinished\\b" message))
+         (compilation-frame
+          (car (filtered-frame-list
+                #'(lambda (frame)
+                    (string-equal (frame-parameter frame 'name)
+                                  my-compilation-frame-name)))))
+         (alive (and compilation-frame
+                     (framep compilation-frame)
+                     (frame-live-p compilation-frame))))
+    (when (and successful alive)
+      (delete-frame compilation-frame))))
+
+(add-hook 'compilation-finish-functions #'my-delete-compilation-frame)
+
+;; Yasnippet
+
+(yas-global-mode 1)
+
+;; AUCTeX
+
+(load "auctex.el" nil t t)
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq-default TeX-master t)
+
+;; LaTeX-mode general
+
+(add-hook 'LaTeX-mode-hook
+          #'(lambda ()
+              (setq-local require-final-newline mode-require-final-newline)))
+
+(setq my-project-root
+      (file-name-directory (directory-file-name (expand-file-name user-emacs-directory))))
+
+(add-hook 'LaTeX-mode-hook
+          #'(lambda ()
+              (setq TeX-output-dir (expand-file-name "_build/default/src" my-project-root))))
+
+;; Noweb
+(add-to-list 'auto-mode-alist '("\\.nw\\'" . LaTeX-mode))
+
+;; LaTeX-math-mode
+
+(add-hook 'LaTeX-mode-hook #'LaTeX-math-mode
+          #'(lambda ()
+              (LaTeX-math-mode 1)
+              (keymap-set LaTeX-math-mode-map "\140 c"
+                          #'(lambda ()
+                              (interactive "*c\nP")
+                              (when dollar (insert "$"))
+                              (insert "\\mathscr{" (char-to-string char) "}")
+                              (when dollar (insert "$"))))))
+
+;; LaTeX environments
+
+(add-hook 'LaTeX-mode-hook
+          #'(lambda ()
+              (add-to-list 'TeX-file-extensions "nw")
+              (LaTeX-add-environments '("codechunk" LaTeX-env-label)
+                                      '("coderemark" LaTeX-env-label)
+                                      '("definition" LaTeX-env-label)
+                                      '("interjection")
+                                      '("question" ["Number"])
+                                      '("answer")
+                                      '("notation" LaTeX-env-label)
+                                      '("remark" LaTeX-env-label))
+              (dolist (label '(("codechunk" . "chk:")
+                               ("coderemark" . "crk:")
+                               ("definition" . "def:")
+                               ("notation" . "not:")
+                               ("remark" . "rem:")))
+                (add-to-list 'LaTeX-label-alist label))
+              (add-to-list 'LaTeX-verbatim-environments "codechunk")
+              (add-to-list 'LaTeX-indent-environment-list
+                           '("codechunk" current-indentation))
+              (add-to-list 'LaTeX-verbatim-macros-with-delims "nwverb")
+              (font-latex-setup)))
+
+;; font-latex
+
+(add-hook 'LaTeX-mode-hook
+          #'(lambda ()
+              (font-latex-add-keywords '(("firstterm" "\{")) 'italic-command)
+              (font-latex-add-keywords '("maketitle" "tableofcontents") 'function)
+              (font-latex-add-keywords '(("title" "\{") ("author" "\{") ("date" "\{"))
+                                       'textual)
+              (font-latex-setup)))
+;; Latex build commands
+
+(defun my-dune (command)
+  "Compile the current LaTeX document."
+  (save-some-buffers t)
+  (let* ((default-directory my-project-root)
+         (compile-command (format "dune %s" command)))
+    (recompile)))
+
+(add-hook 'LaTeX-mode-hook
+          #'(lambda ()
+              (keymap-set LaTeX-mode-map "<kp-left>"
+                          #'(lambda ()
+                              (interactive)
+                              (my-dune "build")))
+              (keymap-set LaTeX-mode-map "<kp-right>"
+                          #'(lambda ()
+                              (interactive)
+                              (my-dune "clean")))))
+
+;; LaTeX-mode snippets
+
+(yas-define-snippets 'latex-mode
+                     '(("zft" "\\firstterm{$1}$0")
+                       ("zv" "\\nwverb|$1|$0")
+                       ("zm" "\\\\($1\\\\)$0")
+                       ("zcc" "\<\<$1\>\>=\n$0\n@")))
+;; RefTeX
+
+(add-hook 'LaTeX-mode-hook #'turn-on-reftex)
+(setq reftex-plug-into-AUCTeX t)
+(setq reftex-bibliography-commands '(".*addbibresource"))
+(setq reftex-cite-format 'biblatex)
+(setq reftex-insert-label-flags '(nil nil))
+
+(setq reftex-label-alist
+      '(("codechunk" ?k "chk:" "\\subpageref{%s}" nil ("code chunk"))
+        ("coderemark" ?c "crk:" "\\ref{%s}" nil ("code remark"))
+        ("definition" ?d "def:" "\\ref{%s}" nil ("definition"))
+        ("notation" ?n "not:" "\\ref{%s}" nil ("notation"))
+        ("remark" ?r "rem:" "\\ref{%s}" nil ("remark"))))
+
+(add-hook 'reftex-mode-hook
+          #'(lambda ()
+              (add-to-list 'reftex-label-regexps "\\\\nextchunklabel{\\(?1:[^}]*\\)}")))
+
+(require 'calc-bin)
+
+(defun my-base-36 (number)
+  "Return the base 36 representation of NUMBER."
+  (let ((calc-number-radix 36))
+    (downcase (math-format-radix number))))
+
+(defun my-label (maxlength &optional padded padright)
+  "Return a lower-case alphanumeric label of length at most MAXLENGTH.
+If PADDED is non-nil, the label is padded with `0' characters so
+that its length equals MAXLENGTH.  If PADRIGHT is also non-nil,
+the padding is inserted on the right rather than the left."
+  (let* ((limit (expt 36 maxlength))
+         (template (concat "%"
+                           (if padded
+                               (concat (if padright "-" "") "0")
+                             "")
+                           (int-to-string maxlength)
+                           "a"))
+         (number (random limit))
+         (spec-alist (list (cons ?a (my-base-36 number)))))
+    (format-spec template spec-alist)))
+
+(setq reftex-format-label-function
+      #'(lambda (label format)
+          (let ((label-prefix (car (split-string label ":")))
+                (new-label (my-label 8 t t)))
+            (if (string= label-prefix "chk")
+                (format "\\nextchunklabel{chk:%s}" new-label)
+              (format format (concat label-prefix ":" new-label))))))
+
+(add-hook 'reftex-mode-hook
+          #'(lambda ()
+              (add-to-list 'reftex-ref-style-alist '("Personal" "personal"
+                                                     (("\\ref" ?\C-m)
+                                                      ("\\Cref" ?C)
+                                                      ("\\cref" ?c)
+                                                      ("\\cpageref" ?d)
+                                                      ("\\pageref" ?p)
+                                                      ("\\Cpageref" ?D)
+                                                      ("\\Ref" ?R))))
+              (setq reftex-ref-style-default-list '("Personal"))))
+
+
+(add-hook 'reftex-mode-hook
+          #'(lambda ()
+              (keymap-set reftex-mode-map
+                          "C-c )"
+                          #'(lambda ()
+                              (interactive)
+                              (let ((current-prefix-arg '(4)))
+                                (reftex-reference))))))
+
+(setq reftex-find-label-regexp-format "\\(label[[:space:]]*=[[:space:]]*\\|\\\\label\\|\\\\nextchunklabel\\)\\([[{][^]}]*[]}]\\)*[[{]\\(%s\\)[]}]")
+
+;; PDF viewer
+
+(pdf-tools-install)
+(setq TeX-source-correlate-method 'synctex)
+(setq TeX-view-program-selection '((output-pdf "PDF Tools")))
+(add-hook 'LaTeX-mode-hook #'TeX-source-correlate-mode)
+(add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
+
+;; bibtex-mode
+
+(setq bibtex-dialect 'biblatex)
+(setq bibtex-user-optional-fields nil)
+(setq bibtex-align-at-equal-sign t)
+(setq bibtex-autokey-edit-before-use nil)
+(setq bibtex-maintain-sorted-entries t)
+(setq fill-column 700)
+
+(setq bibtex-autokey-before-presentation-function
+      #'(lambda (_key)
+          (format "bib:%s" (my-label 8 t t))))
+
+(setq bibtex-autokey-titleword-ignore
+      '("A" "An" "On" "The" "Eine?" "Der" "Die" "Das"
+        "[^[:upper:][:lower:]].*" ".*[^[:upper:][:lower:]0-9].*"))
+
+(add-hook 'bibtex-mode-hook
+          #'(lambda ()
+              (dolist (spec '(whitespace realign last-comma delimiters unify-case braces sort-fields))
+                (add-to-list 'bibtex-entry-format spec))))
+
+;; End of file
+@
+
+<<Generate the rest of the files>>=
+generate .emacs.d/init.el
+@
+
+\clearpage
+
+\bibsection
+
+\clearpage
+
+\nowebchunkssection
+
+\clearpage
+
+\nowebindexsection
+
+\end{document}
+
+%%% End of file `configuration.nw'

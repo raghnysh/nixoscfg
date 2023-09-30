@@ -1,0 +1,391 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesExplPackage
+  {project}
+  {2023-03-06}
+  {0.1.0}
+  {LaTeX style for project documentation}
+\RequirePackage { newpxtext }
+\RequirePackage [ scaled = 0.95 ] { inconsolata }
+\RequirePackage [ leqno ] { amsmath }
+\RequirePackage { amsthm }
+\RequirePackage { thmtools }
+\RequirePackage [ vvarbb ] { newpxmath }
+\RequirePackage [
+  paperheight = 197.0424 mm,
+  paperwidth = 147.7818 mm,
+  top = 5.08 mm,
+  left = 5.08 mm,
+  bottom = 5.08 mm,
+  right = 30.9418 mm,
+  bindingoffset = 0 mm,
+  headheight = 12 pt,
+  headsep = 0 mm,
+  footskip = 3.60004 pt,
+  asymmetric = true
+]
+  { geometry }
+\RequirePackage { fancyhdr }
+\RequirePackage { marginnote }
+\pagestyle { fancy }
+\fancyhf {}
+\cs_gset:cpn { headrulewidth }
+  {
+    0 mm
+  }
+\cs_gset:cpn { footrulewidth }
+  {
+    0 mm
+  }
+\fancyhead [ CO ]
+  {
+    \marginnote
+      {
+        \leftmark
+        \\ [ -1 mm ]
+        \textcolor { LightSlateGray }
+          {
+            \rule { \marginparwidth } { 0.2 mm }
+          }
+        \\
+        \smallskip
+        \thepage
+      }
+      [ 5.08 mm ]
+  }
+\fancyhead [ CE ]
+  {
+    \reversemarginpar
+    \marginnote
+      {
+        \rightmark
+        \\ [ -1 mm ]
+        \textcolor { LightSlateGray }
+          {
+            \rule { \marginparwidth } { 0.2 mm }
+          }
+        \\
+        \smallskip
+        \thepage
+      }
+      [ 5.08 mm ]
+  }
+\cs_gset:cpn { raggedrightmarginnote }
+  {
+    \centering
+  }
+\cs_gset:cpn { chaptermark } #1
+  {
+    \markboth
+      {
+        \textit { Chapter ~ \thechapter \\ \smallskip #1 }
+      }
+      {}
+  }
+\cs_gset:cpn { sectionmark } #1
+  {
+    \markright
+      {
+        \textit { \S \thesection \\ \smallskip #1 }
+      }
+  }
+\RequirePackage { titling }
+\posttitle
+  {
+    \par
+    \end { center }
+    \bigskip
+  }
+\postauthor
+  {
+    \end{ tabular }
+    \par
+    \end{ center }
+    \bigskip
+  }
+\predate
+  {
+    \par
+    \bigskip
+    \begin { center }
+    \large
+  }
+\NewDocumentCommand \ghtopics
+  { m }
+  {
+    \hypersetup { pdfkeywords = {#1} }
+    \par
+    \medskip
+    \textit{GitHub ~ topics}: ~
+    \clist_set:cn { l_tmpa_clist } {#1}
+    \clist_clear:c { l_tmpb_clist }
+    \clist_map_inline:cn { l_tmpa_clist }
+      {
+        \clist_put_right:cn { l_tmpb_clist }
+          {
+            \href { https://github.com/topics/##1.html } {##1}
+          }
+      }
+    \clist_use:cn { l_tmpb_clist } { , ~ }
+  }
+\NewDocumentEnvironment { frontpage }
+  {}
+  {
+    \newgeometry
+      {
+        top = 25 mm,
+        bottom = 25 mm,
+        left = 25 mm,
+        right = 25 mm,
+        bindingoffset = 0 mm,
+        headheight = 0 mm,
+        headsep = 0 mm,
+        includehead = true
+      }
+    \begin{titlingpage}
+  }
+  {
+    \end{titlingpage}
+    \restoregeometry
+    \stepcounter{page}
+  }
+\RequirePackage { tocloft }
+\tocloftpagestyle { empty }
+\NewDocumentCommand \notessection
+  { O{Notes} }
+  {
+    \phantomsection
+    \addcontentsline { toc }{ section } {#1}
+    \markright
+      {
+        \textit { \@chapapp ~ \thechapter ~ #1 }
+      }
+    \section* {#1}
+  }
+\numberwithin { equation } { section }
+\numberwithin { equation } { section }
+\cs_gset:cpn { theequation }
+  {
+    \int_compare:nNnTF
+      { \value { section } }
+      >
+      { 0 }
+      { \thesection \alph { equation } }
+      {
+        \int_compare:nNnTF
+          { \value { chapter } }
+          >
+          { 0 }
+          { \thechapter \alph { equation } }
+          { \arabic { equation } }
+      }
+  }
+\RequirePackage { noweb }
+\cs_gset:cpn { nwmargintag } #1
+  {
+    \group_begin:
+    \leavevmode
+    \kern -\codemargin
+    #1.
+    \kern \codemargin
+    \group_end:
+  }
+\cs_gset:cpn { nwalsodefined } #1
+  { \scan_stop: }
+\cs_gset:cpn { nwused } #1
+  { \scan_stop: }
+\cs_gset:cpn { nwnotused } #1
+  { \scan_stop: }
+\cs_gset:cpn { nwidentuses } #1
+  { \scan_stop: }
+\cs_gset:cpn { nwidentdefs } #1
+  { \scan_stop: }
+\noweboptions
+  {
+    breakcode,
+    smallcode
+  }
+\NewDocumentCommand \nwverb
+  { v }
+  {
+    \code #1 \edoc
+  }
+\NewDocumentCommand \nowebchunkssection
+  { O{List ~ of ~ code ~ chunks} }
+  {
+    \phantomsection
+    \addcontentsline { toc }{ chapter } {#1}
+    \markboth {} { \textsc{ #1 } }
+    \chapter* {#1}
+    \nowebchunks
+  }
+\NewDocumentCommand \nowebindexsection
+  { O{Index ~ of ~ identifiers} }
+  {
+    \phantomsection
+    \addcontentsline { toc }{ chapter } {#1}
+    \markboth {} { \textsc{ #1 } }
+    \chapter* {#1}
+    \nowebindex
+  }
+\RequirePackage [ svgnames ]{ xcolor }
+\RequirePackage { tcolorbox }
+\tcbuselibrary
+  {
+    breakable,
+    skins
+  }
+\newtcolorbox { codechunk }
+  {
+    after = ,
+    breakable = true,
+    colback = blue!4!white,
+    colframe = tcbcolback,
+    enhanced = true,
+    interior ~ style = fill,
+    sharp ~ corners,
+    size = minimal,
+    top = 4 pt
+  }
+\tcolorboxenvironment { verbatim }
+  {
+    after = \par\noindent,
+    breakable = true,
+    colback = black!4!white,
+    colframe = tcbcolback,
+    enhanced = true,
+    fontupper = \small,
+    interior ~ style = fill,
+    sharp ~ corners,
+    size = small
+  }
+\RequirePackage
+  [
+    alldates = iso,
+    backref = true,
+    backrefstyle = none,
+    block = par,
+    seconds = true,
+    style = authoryear
+  ]
+  { biblatex }
+\renewbibmacro { pageref }
+  {
+    \iflistundef { pageref }
+      {
+        \printtext
+          [ parens ]
+          { not ~ cited }
+      }
+      {
+        \printtext
+          [ parens ]
+          {
+            \ifnumgreater { \value { pageref } } {1}
+              {
+                \bibstring { backrefpages }
+                \ppspace
+              }
+              {
+                \bibstring { backrefpage }
+                \ppspace
+              }
+            \printlist
+              [ pageref ]
+              [ - \value { listtotal } ]
+              { pageref }
+          }
+      }
+  }
+\DefineBibliographyStrings
+  { english }
+  {
+    backrefpage = { cited ~ on ~ p \adddot },
+    backrefpages = { cited ~ on ~ pp \adddot },
+    urlseen = { seen }
+  }
+\NewDocumentCommand \bibsection
+  { O{References} }
+  {
+    \phantomsection
+    \printbibliography
+      [
+        heading = bibintoc,
+        title = #1
+      ]
+    \markboth { \textit{ #1 } } { \textit{ #1 } }
+  }
+\dim_gset:cn { bibitemsep } { 2 \itemsep }
+\RequirePackage { xurl }
+\urlstyle { same }
+\RequirePackage [ numbered ]{ bookmark }
+\RequirePackage { hyperref }
+\hypersetup { hypertexnames = false }
+\hypersetup { colorlinks = true }
+% https://tex.stackexchange.com/a/632828
+\hypersetup { allcolors = blue!80!white }
+\hypersetup { pdflang = { en } }
+\RequirePackage { cleveref }
+\declaretheorem
+  [
+    parent = section,
+    style = definition
+  ]
+  { definition }
+\declaretheorem
+  [
+    sibling = definition,
+    style = remark
+  ]
+  { remark }
+\declaretheorem
+  [
+    name = Code ~ Remark,
+    Refname = Code ~ Remark,
+    refname = code ~ remark,
+    sibling = definition,
+    style = remark
+  ]
+  { coderemark }
+\declaretheorem
+  [
+    Refname = Notation,
+    refname = notation,
+    sibling = definition,
+    style = remark
+  ]
+  { notation }
+\NewDocumentEnvironment { interjection }
+  {}
+  {
+    \group_begin:
+    \footnotesize
+  }
+  {
+    \group_end:
+  }
+\NewDocumentEnvironment { question }
+  { O{} }
+  {
+    \par
+    \smallskip
+    \noindent
+    \IfValueT {#1} { \textbf {#1}. }
+  }
+  {
+    \par
+    \smallskip
+  }
+\NewDocumentEnvironment { answer }
+  { O{} }
+  {
+    \par
+  }
+  {
+    \par
+    \smallskip
+  }
+\NewDocumentCommand \firstterm
+  { m }
+  {
+    \emph {#1}
+  }
