@@ -350,9 +350,9 @@
       (setq-default indent-tabs-mode nil)
       (set-fontset-font t '(#x1d7d8 . #x1d7e1) "DejaVu Sans")
       (set-fontset-font t '(#x1d538 . #x1d56b) "DejaVu Sans")
-      (customize-set-variable 'auto-save-visited-interval 2)
+      (setopt auto-save-visited-interval 2)
       (auto-save-visited-mode 1)
-      (customize-set-variable 'auto-revert-interval 2)
+      (setopt auto-revert-interval 2)
       (global-auto-revert-mode 1)
       (global-display-fill-column-indicator-mode 1)
     '';
