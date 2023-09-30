@@ -289,8 +289,11 @@
     programs.emacs.package = pkgs.emacs29-pgtk;
 
     programs.emacs.extraPackages = epkgs: with epkgs; [
+      auctex
       magit
       nix-mode
+      pdf-tools
+      yasnippet
     ];
 
     programs.emacs.extraConfig = ''
@@ -372,8 +375,9 @@
     ## Packages that are not Home Manager modules
     ## ===============================================================
 
-    home.packages = [
-      pkgs.noweb
+    home.packages = with pkgs; [
+      gnumake
+      noweb
     ];
   };
 }
