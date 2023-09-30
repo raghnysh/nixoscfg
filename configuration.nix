@@ -358,6 +358,209 @@
       (setopt auto-revert-interval 2)
       (global-auto-revert-mode 1)
       (global-display-fill-column-indicator-mode 1)
+      (add-hook 'text-mode-hook 'turn-on-auto-fill)
+
+      (setq-default compilation-scroll-output 'first-error)
+      (setq my-compilation-frame-name "compilation")
+
+      (add-to-list 'display-buffer-alist
+                   `(,(rx (and string-start "*compilation*" string-end))
+                     (display-buffer-reuse-window
+                      display-buffer-pop-up-frame)
+                     (reusable-frames . t)
+                     (pop-up-frame-parameters
+                      .
+                      ((name . ,my-compilation-frame-name)
+                       (height . 20)
+                       (width . 80)
+                       (top . (- 0))
+                       (left . (- 0))))))
+
+      (defun my-delete-compilation-frame (buffer message)
+        (let* ((successful (string-match "\\bfinished\\b" message))
+               (compilation-frame
+                (car (filtered-frame-list
+                      #'(lambda (frame)
+                          (string-equal (frame-parameter frame 'name)
+                                        my-compilation-frame-name)))))
+               (alive (and compilation-frame
+                           (framep compilation-frame)
+                           (frame-live-p compilation-frame))))
+          (when (and successful alive)
+            (delete-frame compilation-frame))))
+
+      (add-hook 'compilation-finish-functions #'my-delete-compilation-frame)
+
+      (yas-global-mode 1)
+
+      (load "auctex.el" nil t t)
+      (setq TeX-auto-save t)
+      (setq TeX-parse-self t)
+      (setq-default TeX-master t)
+
+      (add-to-list 'auto-mode-alist '("\\.nw\\'" . LaTeX-mode))
+
+      (add-hook 'LaTeX-mode-hook #'LaTeX-math-mode
+                #'(lambda ()
+                    (LaTeX-math-mode 1)
+                    (keymap-set LaTeX-math-mode-map "\140 c"
+                                #'(lambda ()
+                                    (interactive "*c\nP")
+                                    (when dollar (insert "$"))
+                                    (insert "\\mathscr{" (char-to-string char) "}")
+                                    (when dollar (insert "$"))))))
+
+      (add-hook 'LaTeX-mode-hook
+                #'(lambda ()
+                    (add-to-list 'TeX-file-extensions "nw")
+                    (LaTeX-add-environments '("codechunk" LaTeX-env-label)
+                                            '("coderemark" LaTeX-env-label)
+                                            '("definition" LaTeX-env-label)
+                                            '("interjection")
+                                            '("question" ["Number"])
+                                            '("answer")
+                                            '("notation" LaTeX-env-label)
+                                            '("remark" LaTeX-env-label))
+                    (dolist (label '(("codechunk" . "chk:")
+                                     ("coderemark" . "crk:")
+                                     ("definition" . "def:")
+                                     ("notation" . "not:")
+                                     ("remark" . "rem:")))
+                      (add-to-list 'LaTeX-label-alist label))
+                    (add-to-list 'LaTeX-verbatim-environments "codechunk")
+                    (add-to-list 'LaTeX-indent-environment-list
+                                 '("codechunk" current-indentation))
+                    (add-to-list 'LaTeX-verbatim-macros-with-delims "nwverb")
+                    (font-latex-setup)))
+
+      (add-hook 'LaTeX-mode-hook
+                #'(lambda ()
+                    (font-latex-add-keywords '(("firstterm" "\{")) 'italic-command)
+                    (font-latex-add-keywords '("maketitle" "tableofcontents") 'function)
+                    (font-latex-add-keywords '(("title" "\{") ("author" "\{") ("date" "\{"))
+                                             'textual)
+                    (font-latex-setup)))
+
+      (defun my-make (target)
+        "Compile the current LaTeX document."
+        (save-some-buffers t)
+        (let* ((compile-command (format "make %s" target)))
+          (recompile)))
+
+      (add-hook 'LaTeX-mode-hook
+                #'(lambda ()
+                    (keymap-set LaTeX-mode-map "<kp-left>"
+                                #'(lambda ()
+                                    (interactive)
+                                    (my-make "all")))
+                    (keymap-set LaTeX-mode-map "<kp-right>"
+                                #'(lambda ()
+                                    (interactive)
+                                    (my-make "clean")))))
+
+      (yas-define-snippets 'latex-mode
+                           '(("zft" "\\firstterm{$1}$0")
+                             ("zv" "\\nwverb|$1|$0")
+                             ("zm" "\\\\($1\\\\)$0")
+                             ("zcc" "\<\<$1\>\>=\n$0\n@")))
+
+      (add-hook 'LaTeX-mode-hook #'turn-on-reftex)
+      (setq reftex-plug-into-AUCTeX t)
+      (setq reftex-bibliography-commands '(".*addbibresource"))
+      (setq reftex-cite-format 'biblatex)
+      (setq reftex-insert-label-flags '(nil nil))
+
+      (setq reftex-label-alist
+            '(("codechunk" ?k "chk:" "\\subpageref{%s}" nil ("code chunk"))
+              ("coderemark" ?c "crk:" "\\ref{%s}" nil ("code remark"))
+              ("definition" ?d "def:" "\\ref{%s}" nil ("definition"))
+              ("notation" ?n "not:" "\\ref{%s}" nil ("notation"))
+              ("remark" ?r "rem:" "\\ref{%s}" nil ("remark"))))
+
+      (add-hook 'reftex-mode-hook
+                #'(lambda ()
+                    (add-to-list 'reftex-label-regexps "\\\\nextchunklabel{\\(?1:[^}]*\\)}")))
+
+      (require 'calc-bin)
+
+      (defun my-base-36 (number)
+        "Return the base 36 representation of NUMBER."
+        (let ((calc-number-radix 36))
+          (downcase (math-format-radix number))))
+
+      (defun my-label (maxlength &optional padded padright)
+        "Return a lower-case alphanumeric label of length at most MAXLENGTH.
+      If PADDED is non-nil, the label is padded with `0' characters so
+      that its length equals MAXLENGTH.  If PADRIGHT is also non-nil,
+      the padding is inserted on the right rather than the left."
+        (let* ((limit (expt 36 maxlength))
+               (template (concat "%"
+                                 (if padded
+                                     (concat (if padright "-" "") "0")
+                                   "")
+                                 (int-to-string maxlength)
+                                 "a"))
+               (number (random limit))
+               (spec-alist (list (cons ?a (my-base-36 number)))))
+          (format-spec template spec-alist)))
+
+      (setq reftex-format-label-function
+            #'(lambda (label format)
+                (let ((label-prefix (car (split-string label ":")))
+                      (new-label (my-label 8 t t)))
+                  (if (string= label-prefix "chk")
+                      (format "\\nextchunklabel{chk:%s}" new-label)
+                    (format format (concat label-prefix ":" new-label))))))
+
+      (add-hook 'reftex-mode-hook
+                #'(lambda ()
+                    (add-to-list 'reftex-ref-style-alist '("Personal" "personal"
+                                                           (("\\ref" ?\C-m)
+                                                            ("\\Cref" ?C)
+                                                            ("\\cref" ?c)
+                                                            ("\\cpageref" ?d)
+                                                            ("\\pageref" ?p)
+                                                            ("\\Cpageref" ?D)
+                                                            ("\\Ref" ?R))))
+                    (setq reftex-ref-style-default-list '("Personal"))))
+
+
+      (add-hook 'reftex-mode-hook
+                #'(lambda ()
+                    (keymap-set reftex-mode-map
+                                "C-c )"
+                                #'(lambda ()
+                                    (interactive)
+                                    (let ((current-prefix-arg '(4)))
+                                      (reftex-reference))))))
+
+      (setq reftex-find-label-regexp-format "\\(label[[:space:]]*=[[:space:]]*\\|\\\\label\\|\\\\nextchunklabel\\)\\([[{][^]}]*[]}]\\)*[[{]\\(%s\\)[]}]")
+
+      (pdf-tools-install)
+      (setq TeX-source-correlate-method 'synctex)
+      (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
+      (add-hook 'LaTeX-mode-hook #'TeX-source-correlate-mode)
+      (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
+
+      (setq bibtex-dialect 'biblatex)
+      (setq bibtex-user-optional-fields nil)
+      (setq bibtex-align-at-equal-sign t)
+      (setq bibtex-autokey-edit-before-use nil)
+      (setq bibtex-maintain-sorted-entries t)
+      (setq fill-column 700)
+
+      (setq bibtex-autokey-before-presentation-function
+            #'(lambda (_key)
+                (format "bib:%s" (my-label 8 t t))))
+
+      (setq bibtex-autokey-titleword-ignore
+            '("A" "An" "On" "The" "Eine?" "Der" "Die" "Das"
+              "[^[:upper:][:lower:]].*" ".*[^[:upper:][:lower:]0-9].*"))
+
+      (add-hook 'bibtex-mode-hook
+                #'(lambda ()
+                    (dolist (spec '(whitespace realign last-comma delimiters unify-case braces sort-fields))
+                      (add-to-list 'bibtex-entry-format spec))))
     '';
 
     home.file."init.el".target = ".emacs.d/init.el";
