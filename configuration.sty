@@ -21,20 +21,25 @@
 \RequirePackage [ scaled = 0.95 ] { inconsolata }
 \RequirePackage { newpxmath }
 
+%% ===================================================================
+%% Page layout
+%% ===================================================================
+
 \RequirePackage [
-  paperheight = 197.0424 mm,
-  paperwidth = 147.7818 mm,
-  top = 5.08 mm,
-  left = 5.08 mm,
-  bottom = 5.08 mm,
-  right = 30.9418 mm,
-  bindingoffset = 0 mm,
-  headheight = 12 pt,
-  headsep = 0 mm,
-  footskip = 3.60004 pt,
-  asymmetric = true
+  paperheight = 7.9 in,
+  paperwidth = 4.5 in,
+  top = 0.2 in,
+  bottom = 0.2 in,
+  inner = 0.2 in,
+  outer = 0.2 in,
+  bindingoffset = 0 in,
+  includehead = true,
+  headheight = 15 pt,
+  headsep = \baselineskip,
+  twoside = false
 ]
   { geometry }
+
 \RequirePackage { fancyhdr }
 \RequirePackage { marginnote }
 \pagestyle { fancy }
