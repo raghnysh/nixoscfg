@@ -291,7 +291,6 @@
       (menu-bar-mode -1)
       (tool-bar-mode -1)
       (set-scroll-bar-mode nil)
-      (modify-all-frames-parameters '((fullscreen . maximized)))
       (defvar my-laptop-monitor-font "DejaVu Sans Mono 16")
       (defvar my-external-monitor-font "DejaVu Sans Mono 14")
       (modify-all-frames-parameters `((font . ,my-laptop-monitor-font)))
@@ -358,8 +357,9 @@
                       ((name . ,my-compilation-frame-name)
                        (height . 20)
                        (width . 80)
-                       (top . (- 0))
-                       (left . (- 0))))))
+                       (user-position . t)
+                       (top . 0)
+                       (left . 0)))))
 
       (defun my-delete-compilation-frame (buffer message)
         (let* ((successful (string-match "\\bfinished\\b" message))
@@ -525,7 +525,6 @@
       (setq TeX-source-correlate-method 'synctex)
       (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
       (add-hook 'LaTeX-mode-hook #'TeX-source-correlate-mode)
-      (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
 
       (setq bibtex-dialect 'biblatex)
       (setq bibtex-user-optional-fields nil)
