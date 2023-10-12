@@ -40,70 +40,21 @@
 ]
   { geometry }
 
+%% ===================================================================
+%% Page headers and footers
+%% ===================================================================
+
 \RequirePackage { fancyhdr }
-\RequirePackage { marginnote }
 \pagestyle { fancy }
 \fancyhf {}
-\cs_gset:cpn { headrulewidth }
-  {
-    0 mm
-  }
-\cs_gset:cpn { footrulewidth }
-  {
-    0 mm
-  }
-\fancyhead [ CO ]
-  {
-    \marginnote
-      {
-        \leftmark
-        \\ [ -1 mm ]
-        \textcolor { LightSlateGray }
-          {
-            \rule { \marginparwidth } { 0.2 mm }
-          }
-        \\
-        \smallskip
-        \thepage
-      }
-      [ 5.08 mm ]
-  }
-\fancyhead [ CE ]
-  {
-    \reversemarginpar
-    \marginnote
-      {
-        \rightmark
-        \\ [ -1 mm ]
-        \textcolor { LightSlateGray }
-          {
-            \rule { \marginparwidth } { 0.2 mm }
-          }
-        \\
-        \smallskip
-        \thepage
-      }
-      [ 5.08 mm ]
-  }
-\cs_gset:cpn { raggedrightmarginnote }
-  {
-    \centering
-  }
-\cs_gset:cpn { chaptermark } #1
-  {
-    \markboth
-      {
-        \textit { Chapter ~ \thechapter \\ \smallskip #1 }
-      }
-      {}
-  }
+\fancyhead [ L ] { \nouppercase { \rightmark } }
+\fancyhead [ R ] { \thepage }
+
 \cs_gset:cpn { sectionmark } #1
   {
-    \markright
-      {
-        \textit { \S \thesection \\ \smallskip #1 }
-      }
+    \markright { \S ~ \thesection. ~ #1 }
   }
+
 \RequirePackage { titling }
 \posttitle
   {
