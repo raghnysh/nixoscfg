@@ -267,21 +267,6 @@
     programs.git.extraConfig.status.showUntrackedFiles = "all";
 
     ## ===============================================================
-    ## TeX Live
-    ## ===============================================================
-
-    programs.texlive.enable = true;
-
-    programs.texlive.extraPackages = tpkgs: {
-      inherit (tpkgs) scheme-full;
-
-      pkgFilter = pkg:
-        pkgs.lib.elem pkg.tlType [ "run" "bin" "doc" ];
-
-      noweb = { pkgs = [ pkgs.noweb ]; };
-    };
-
-    ## ===============================================================
     ## Emacs
     ## ===============================================================
 
@@ -578,10 +563,27 @@
     ## Packages that are not Home Manager modules
     ## ===============================================================
 
-    home.packages = with pkgs; [
-      gnumake
-      noweb
-    ];
+    home.packages = let
+      pkgs2211Path = builtins.fetchTarball {
+        url = "https://github.com/NixOS/nixpkgs/archive/nixos-22.11.tar.gz";
+        sha256 = "1xi53rlslcprybsvrmipm69ypd3g3hr7wkxvzc73ag8296yclyll";
+      };
+      pkgs2211 = import pkgs2211Path { config = pkgs.config; };
+      texlivePackage = pkgs2211.texlive.combine {
+        inherit (pkgs2211.texlive) scheme-full;
+        pkgFilter = pkg:
+          pkgs2211.lib.elem pkg.tlType [ "run" "bin" "doc" ];
+        noweb = { pkgs = [ pkgs.noweb ]; };
+      };
+      texlivePackageNoCollisions = texlivePackage.override {
+        ignoreCollisions = true;
+      };
+    in
+      [
+        pkgs.gnumake
+        pkgs.noweb
+        texlivePackageNoCollisions
+      ];
   };
 }
 
