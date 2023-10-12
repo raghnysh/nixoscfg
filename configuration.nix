@@ -291,7 +291,7 @@
       (menu-bar-mode -1)
       (tool-bar-mode -1)
       (set-scroll-bar-mode nil)
-      (defvar my-laptop-monitor-font "DejaVu Sans Mono 16")
+      (defvar my-laptop-monitor-font "DejaVu Sans Mono 18")
       (defvar my-external-monitor-font "DejaVu Sans Mono 14")
       (modify-all-frames-parameters `((font . ,my-laptop-monitor-font)))
       (defvar my-laptop-monitor-name "0x08c6")
