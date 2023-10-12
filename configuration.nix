@@ -522,6 +522,8 @@
       (setq reftex-find-label-regexp-format "\\(label[[:space:]]*=[[:space:]]*\\|\\\\label\\|\\\\nextchunklabel\\)\\([[{][^]}]*[]}]\\)*[[{]\\(%s\\)[]}]")
 
       (pdf-tools-install)
+      (setq pdf-view-midnight-colors '("black" . "gray98"))
+      (add-to-list 'pdf-tools-enabled-modes 'pdf-view-midnight-minor-mode)
       (setq TeX-source-correlate-method 'synctex)
       (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
       (add-hook 'LaTeX-mode-hook #'TeX-source-correlate-mode)
