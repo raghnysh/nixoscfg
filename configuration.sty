@@ -55,27 +55,17 @@
     \markright { \S ~ \thesection. ~ #1 }
   }
 
+%% ===================================================================
+%% Title page
+%% ===================================================================
+
 \RequirePackage { titling }
-\posttitle
+
+\AfterEndEnvironment { titlingpage }
   {
-    \par
-    \end { center }
-    \bigskip
+    \stepcounter { page }
   }
-\postauthor
-  {
-    \end{ tabular }
-    \par
-    \end{ center }
-    \bigskip
-  }
-\predate
-  {
-    \par
-    \bigskip
-    \begin { center }
-    \large
-  }
+
 \NewDocumentCommand \ghtopics
   { m }
   {
@@ -94,26 +84,12 @@
       }
     \clist_use:cn { l_tmpb_clist } { , ~ }
   }
-\NewDocumentEnvironment { frontpage }
-  {}
+
   {
-    \newgeometry
       {
-        top = 25 mm,
-        bottom = 25 mm,
-        left = 25 mm,
-        right = 25 mm,
-        bindingoffset = 0 mm,
-        headheight = 0 mm,
-        headsep = 0 mm,
-        includehead = true
       }
-    \begin{titlingpage}
   }
   {
-    \end{titlingpage}
-    \restoregeometry
-    \stepcounter{page}
   }
 \RequirePackage { tocloft }
 \tocloftpagestyle { empty }
