@@ -271,65 +271,7 @@
     size = small
   }
 \RequirePackage { cleveref }
-\declaretheorem
-  [
-    parent = section,
-    style = definition
-  ]
-  { definition }
-\declaretheorem
-  [
-    sibling = definition,
-    style = remark
-  ]
-  { remark }
-\declaretheorem
-  [
-    name = Code ~ Remark,
-    Refname = Code ~ Remark,
-    refname = code ~ remark,
-    sibling = definition,
-    style = remark
-  ]
-  { coderemark }
-\declaretheorem
-  [
-    Refname = Notation,
-    refname = notation,
-    sibling = definition,
-    style = remark
-  ]
-  { notation }
-\NewDocumentEnvironment { interjection }
-  {}
-  {
-    \group_begin:
-    \footnotesize
-  }
-  {
-    \group_end:
-  }
-\NewDocumentEnvironment { question }
-  { O{} }
-  {
-    \par
-    \smallskip
-    \noindent
-    \IfValueT {#1} { \textbf {#1}. }
-  }
-  {
-    \par
-    \smallskip
-  }
-\NewDocumentEnvironment { answer }
-  { O{} }
-  {
-    \par
-  }
-  {
-    \par
-    \smallskip
-  }
+
 \NewDocumentCommand \firstterm
   { m }
   {
