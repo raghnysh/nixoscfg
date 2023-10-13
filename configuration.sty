@@ -191,7 +191,12 @@
     \guillemetright
   }
 
+%% ===================================================================
+%% Noweb
+%% ===================================================================
+
 \RequirePackage { noweb }
+
 \cs_gset:cpn { nwmargintag } #1
   {
     \group_begin:
@@ -201,51 +206,65 @@
     \kern \codemargin
     \group_end:
   }
+
 \cs_gset:cpn { nwalsodefined } #1
   { \scan_stop: }
+
 \cs_gset:cpn { nwused } #1
   { \scan_stop: }
+
 \cs_gset:cpn { nwnotused } #1
   { \scan_stop: }
+
 \cs_gset:cpn { nwidentuses } #1
   { \scan_stop: }
+
 \cs_gset:cpn { nwidentdefs } #1
   { \scan_stop: }
+
 \noweboptions
   {
     breakcode,
     smallcode
   }
+
 \NewDocumentCommand \nwverb
   { v }
   {
     \code #1 \edoc
   }
+
 \NewDocumentCommand \nowebchunkssection
   { O{List ~ of ~ code ~ chunks} }
   {
+    \clearpage
     \phantomsection
-    \addcontentsline { toc }{ chapter } {#1}
-    \markboth {} { \textsc{ #1 } }
-    \chapter* {#1}
+    \addcontentsline { toc }{ section } {#1}
+    \section* {#1}
+    \markright {#1}
     \nowebchunks
   }
+
 \NewDocumentCommand \nowebindexsection
-  { O{Index ~ of ~ identifiers} }
+  { O{List ~ of ~ identifiers} }
   {
+    \clearpage
     \phantomsection
-    \addcontentsline { toc }{ chapter } {#1}
-    \markboth {} { \textsc{ #1 } }
-    \chapter* {#1}
+    \addcontentsline { toc }{ section } {#1}
+    \markright {#1}
+    \section* {#1}
     \nowebindex
   }
+
 \RequirePackage [ svgnames ]{ xcolor }
 \RequirePackage { tcolorbox }
+
 \tcbuselibrary
   {
     breakable,
     skins
   }
+
 \newtcolorbox { codechunk }
   {
     after = ,
@@ -258,6 +277,7 @@
     size = minimal,
     top = 4 pt
   }
+
 \tcolorboxenvironment { verbatim }
   {
     after = \par\noindent,
