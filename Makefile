@@ -1,11 +1,14 @@
 .PHONY: all
-all: configuration.pdf configuration-noweb.nix
+all: configuration.synctex.orig.gz configuration-noweb.nix
 
-configuration.pdf: configuration.tex
-	latexmk -pdf -file-line-error -halt-on-error -interaction=nonstopmode -synctex=1 configuration.tex
+configuration.synctex.orig.gz: configuration.pdf
 	cp configuration.synctex.gz configuration.synctex.orig.gz && gunzip -c configuration.synctex.orig.gz | sed 's@configuration\.tex@configuration.nw@' | gzip > configuration.synctex.gz
 
-configuration.tex: configuration.nw configuration.bib
+.PHONY: force
+configuration.pdf: configuration.tex force
+	latexmk -pdf -file-line-error -halt-on-error -interaction=nonstopmode -synctex=1 configuration.tex
+
+configuration.tex: configuration.nw
 	noweave -delay -index configuration.nw > configuration.tex
 
 configuration-noweb.nix: configuration.nw
