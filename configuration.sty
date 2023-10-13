@@ -100,26 +100,78 @@
 \AddToHook { cmd / tableofcontents / after }
   { \clearpage }
 
+%% ===================================================================
+%% Bibliography
+%% ===================================================================
+
+\RequirePackage
+  [
+    alldates = iso,
+    backref = true,
+    backrefstyle = none,
+    block = par,
+    seconds = true,
+    style = authoryear
+  ]
+  { biblatex }
+
+\renewbibmacro { pageref }
   {
+    \iflistundef { pageref }
       {
+        \printtext
+          [ parens ]
+          { not ~ cited }
+      }
+      {
+        \printtext
+          [ parens ]
+          {
+            \ifnumgreater { \value { pageref } } {1}
+              {
+                \bibstring { backrefpages }
+                \ppspace
+              }
+              {
+                \bibstring { backrefpage }
+                \ppspace
+              }
+            \printlist
+              [ pageref ]
+              [ - \value { listtotal } ]
+              { pageref }
+          }
       }
   }
+
+\DefineBibliographyStrings
+  { english }
   {
+    backrefpage = { cited ~ on ~ p \adddot },
+    backrefpages = { cited ~ on ~ pp \adddot },
+    urlseen = { seen }
   }
 \NewDocumentCommand \notessection
   { O{Notes} }
+
+\NewDocumentCommand \bibsection
+  { O{References} }
   {
+    \clearpage
     \phantomsection
-    \addcontentsline { toc }{ section } {#1}
-    \markright
-      {
-        \textit { \@chapapp ~ \thechapter ~ #1 }
-      }
-    \section* {#1}
+    \markright {#1}
+    \printbibliography
+      [
+        heading = bibintoc,
+        title = #1
+      ]
   }
 \numberwithin { equation } { section }
 \numberwithin { equation } { section }
 \cs_gset:cpn { theequation }
+
+\dim_gset:cn { bibitemsep } { 2 \itemsep }
+
   {
     \int_compare:nNnTF
       { \value { section } }
@@ -214,63 +266,6 @@
     sharp ~ corners,
     size = small
   }
-\RequirePackage
-  [
-    alldates = iso,
-    backref = true,
-    backrefstyle = none,
-    block = par,
-    seconds = true,
-    style = authoryear
-  ]
-  { biblatex }
-\renewbibmacro { pageref }
-  {
-    \iflistundef { pageref }
-      {
-        \printtext
-          [ parens ]
-          { not ~ cited }
-      }
-      {
-        \printtext
-          [ parens ]
-          {
-            \ifnumgreater { \value { pageref } } {1}
-              {
-                \bibstring { backrefpages }
-                \ppspace
-              }
-              {
-                \bibstring { backrefpage }
-                \ppspace
-              }
-            \printlist
-              [ pageref ]
-              [ - \value { listtotal } ]
-              { pageref }
-          }
-      }
-  }
-\DefineBibliographyStrings
-  { english }
-  {
-    backrefpage = { cited ~ on ~ p \adddot },
-    backrefpages = { cited ~ on ~ pp \adddot },
-    urlseen = { seen }
-  }
-\NewDocumentCommand \bibsection
-  { O{References} }
-  {
-    \phantomsection
-    \printbibliography
-      [
-        heading = bibintoc,
-        title = #1
-      ]
-    \markboth { \textit{ #1 } } { \textit{ #1 } }
-  }
-\dim_gset:cn { bibitemsep } { 2 \itemsep }
 \RequirePackage { xurl }
 \urlstyle { same }
 \RequirePackage [ numbered ]{ bookmark }
