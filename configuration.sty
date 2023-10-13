@@ -166,9 +166,6 @@
         title = #1
       ]
   }
-\numberwithin { equation } { section }
-\numberwithin { equation } { section }
-\cs_gset:cpn { theequation }
 
 \dim_gset:cn { bibitemsep } { 2 \itemsep }
 
@@ -189,19 +186,6 @@
 \NewDocumentCommand \filename
   { m }
   {
-    \int_compare:nNnTF
-      { \value { section } }
-      >
-      { 0 }
-      { \thesection \alph { equation } }
-      {
-        \int_compare:nNnTF
-          { \value { chapter } }
-          >
-          { 0 }
-          { \thechapter \alph { equation } }
-          { \arabic { equation } }
-      }
     \guillemetleft
     \nolinkurl {#1}
     \guillemetright
