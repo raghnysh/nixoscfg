@@ -85,14 +85,23 @@
     \clist_use:cn { l_tmpb_clist } { , ~ }
   }
 
+%% ===================================================================
+%% Table of contents
+%% ===================================================================
+
+\RequirePackage { tocloft }
+
+\tocloftpagestyle { fancy }
+
+\AddToHook { cmd / tableofcontents / after }
+  { \clearpage }
+
   {
       {
       }
   }
   {
   }
-\RequirePackage { tocloft }
-\tocloftpagestyle { empty }
 \NewDocumentCommand \notessection
   { O{Notes} }
   {
