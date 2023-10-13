@@ -172,6 +172,22 @@
 
 \dim_gset:cn { bibitemsep } { 2 \itemsep }
 
+%% ===================================================================
+%% Hypertext
+%% ===================================================================
+
+\RequirePackage { url }
+\urlstyle { same }
+\RequirePackage [ numbered ]{ bookmark }
+\RequirePackage { hyperref }
+\hypersetup { hypertexnames = false }
+\hypersetup { colorlinks = true }
+% https://tex.stackexchange.com/a/632828
+\hypersetup { allcolors = blue!80!white }
+\hypersetup { pdflang = { en } }
+
+\NewDocumentCommand \filename
+  { m }
   {
     \int_compare:nNnTF
       { \value { section } }
@@ -186,7 +202,11 @@
           { \thechapter \alph { equation } }
           { \arabic { equation } }
       }
+    \guillemetleft
+    \nolinkurl {#1}
+    \guillemetright
   }
+
 \RequirePackage { noweb }
 \cs_gset:cpn { nwmargintag } #1
   {
@@ -266,15 +286,6 @@
     sharp ~ corners,
     size = small
   }
-\RequirePackage { xurl }
-\urlstyle { same }
-\RequirePackage [ numbered ]{ bookmark }
-\RequirePackage { hyperref }
-\hypersetup { hypertexnames = false }
-\hypersetup { colorlinks = true }
-% https://tex.stackexchange.com/a/632828
-\hypersetup { allcolors = blue!80!white }
-\hypersetup { pdflang = { en } }
 \RequirePackage { cleveref }
 \declaretheorem
   [
