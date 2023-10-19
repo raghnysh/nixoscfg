@@ -158,6 +158,17 @@ networkmanager
 @ %def networkmanager
 \end{codechunk}
 
+\section{Date and time}
+\label{sec:jhrur9yx}
+
+The date and time settings are specified by the time zone.
+\begin{codechunk}
+\nextchunklabel{chk:smjj65dp}
+<<Time zone setting>>=
+time.timeZone = "Asia/Kolkata";
+@ %def time.timeZone
+\end{codechunk}
+
 @
 \end{codechunk}
 
