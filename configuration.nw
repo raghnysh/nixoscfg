@@ -315,6 +315,19 @@ services.xserver.xkbVariant = "";
 @ %def services.xserver.xkbVariant
 \end{codechunk}
 
+\section{Printing}
+\label{sec:9z18mjmr}
+
+I have kept the configuration of the printing software as it was
+created by the NixOS installer.
+
+\begin{codechunk}
+\nextchunklabel{chk:aquk20pl}
+<<Setting for printing>>=
+services.printing.enable = true;
+@ %def services.printing.enable
+\end{codechunk}
+
 @
 \end{codechunk}
 
