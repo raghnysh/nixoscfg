@@ -93,7 +93,6 @@
   ## https://apiraino.github.io/ubuntu-gnome-power/
 
   services.logind.lidSwitchDocked = "suspend";
-  services.upower.enable = true;
   services.upower.ignoreLid = true;
 
   ## =================================================================
