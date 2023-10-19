@@ -512,9 +512,20 @@ imports = [
 \nextchunklabel{chk:o7ygwvzn}
 <<configuration-noweb.nix>>=
 {
+  <<Imports setting>>
   <<System base version setting>>
+  <<Bootloader settings>>
   <<Network settings>>
-  home-manager.users.raghnysh = { pkgs, ... }: {
+  <<Time zone setting>>
+  <<Locale settings>>
+  <<Unfree packages setting>>
+  <<Graphical environment settings>>
+  <<Setting for printing>>
+  <<Settings for sound>>
+  <<Lid closure settings>>
+  <<My user profile settings>>
+  <<General settings of Home Manager>>
+  <<Home Manager user attribute name>> = { pkgs, ... }: {
     <<Home Manager base version setting>>
   };
 }
