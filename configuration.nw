@@ -169,6 +169,48 @@ time.timeZone = "Asia/Kolkata";
 @ %def time.timeZone
 \end{codechunk}
 
+\section{Locale settings}
+\label{sec:3dmlfks5}
+
+\firstterm{Locale} settings specify the language used on this system
+for messages and such, and the preferences for linguistic aspects of
+the user interface of the system such as the order of characters to be
+used in sorting \parencite{bib:nhg983t7}.  These settings are a part
+of the process of \firstterm{internationalisation} (which word is
+abbreviated as \firstterm{i18n}), whose aim is to design software so
+that it can be easily adapted to different cultural environments
+\parencite{bib:kiy97d4i}.
+\begin{codechunk}
+\nextchunklabel{chk:2uu0q8ox}
+<<Locale settings>>=
+<<Base language setting>>
+<<Sorting order setting>>
+@
+\end{codechunk}
+
+The base language setting is used by applications as the default
+specification of language when there is no other explicit instruction
+as to what language should be used by the application for its user
+interfaces.  I choose British English, the language and the variant of
+that language that I am most comfortable with.
+\begin{codechunk}
+\nextchunklabel{chk:k2trmtxk}
+<<Base language setting>>=
+i18n.defaultLocale = "en_GB.UTF-8";
+@ %def i18n.defaultLocale
+\end{codechunk}
+
+When a list of words is sorted (as in the output of the \nwverb|ls|
+command), an order that is commonly used is one in which numbers
+precede upper case letters, which in turn precede lower case letters.
+This order is specified with the following locale setting:
+\begin{codechunk}
+\nextchunklabel{chk:9qh82y4i}
+<<Sorting order setting>>=
+i18n.extraLocaleSettings.LC_COLLATE = "C.UTF-8";
+@ %def i18n.extraLocaleSettings.LC_COLLATE
+\end{codechunk}
+
 @
 \end{codechunk}
 
