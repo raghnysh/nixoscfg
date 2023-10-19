@@ -492,6 +492,16 @@ builtins.fetchTarball {
 @
 \end{codechunk}
 
+\section{Import of modules}
+\label{sec:wk15aj6o}
+
+\begin{codechunk}
+\nextchunklabel{chk:qbq68axo}
+<<Imports setting>>=
+imports = [
+  ./hardware-configuration.nix
+  <<Home Manager NixOS module path>>
+];
 @
 \end{codechunk}
 
