@@ -355,6 +355,78 @@ services.pipewire.pulse.enable = true;
 @ %def services.pipewire.pulse.enable
 \end{codechunk}
 
+\section{My user profile}
+\label{sec:qopaextu}
+
+My username on this computer is
+\begin{codechunk}
+\nextchunklabel{chk:wqb5wrwq}
+<<My username>>=
+raghnysh
+@ %def raghnysh
+\end{codechunk}
+which is an abbreviation of my name
+\begin{codechunk}
+\nextchunklabel{chk:inddl4ui}
+<<My name>>=
+Raghavendra Nyshadham
+@
+\end{codechunk}
+
+My user profile is configured through the attribute set
+\begin{codechunk}
+\nextchunklabel{chk:wcdabdty}
+<<My user profile>>=
+users.users.<<My username>>
+@ %def users.users.raghnysh
+\end{codechunk}
+
+The first attribute I add to my user profile set is my name:
+\begin{codechunk}
+\nextchunklabel{chk:4n5aawhc}
+<<My user profile settings>>=
+<<My user profile>>.description = "<<My name>>";
+@ %def users.users.raghnysh.description
+\end{codechunk}
+
+I am a ``real'' user as opposed to a ``system'' user such as the user
+\nwverb|cups| which manages printing services on this computer.
+\begin{codechunk}
+\nextchunklabel{chk:ynaxhugb}
+<<My user profile settings>>=
+<<My user profile>>.isNormalUser = true;
+@ %def users.users.raghnysh.isNormalUser
+\end{codechunk}
+
+I have to be a member of the user group \nwverb|wheel| to carry out
+administrative tasks on the computer using the \nwverb|sudo| command.
+\begin{codechunk}
+\nextchunklabel{chk:p7mkklj7}
+<<My user groups>>=
+wheel
+@ %def wheel
+\end{codechunk}
+I also have to be able to control the NetworkManager application to
+make changes to the network configuration whenever needed, so I have
+to be a member of the appropriate user group.
+\begin{codechunk}
+\nextchunklabel{chk:zmd46nq3}
+<<My user groups>>=
+<<NetworkManager group>>
+@
+\end{codechunk}
+I add the list of the user groups which contain me to my user profile
+set.
+\begin{codechunk}
+\nextchunklabel{chk:2ddciyul}
+<<My user profile settings>>=
+<<My user profile>>.extraGroups = [
+  <<My user groups>>
+];
+@ %def users.users.raghnysh.extraGroups
+\end{codechunk}
+That completes the declaration of my user profile.
+
 @
 \end{codechunk}
 
