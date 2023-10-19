@@ -328,6 +328,33 @@ services.printing.enable = true;
 @ %def services.printing.enable
 \end{codechunk}
 
+\section{Sound}
+\label{sec:5vk5vbq4}
+
+The settings for the sound input and output systems are kept unchanged
+from the NixOS installation.  I do not know what these settings mean,
+and did not bother to learn about them because I did not need to
+modify them.
+
+\begin{codechunk}
+\nextchunklabel{chk:8j9bit25}
+<<Settings for sound>>=
+sound.enable = true;
+hardware.pulseaudio.enable = false;
+security.rtkit.enable = true;
+services.pipewire.enable = true;
+services.pipewire.alsa.enable = true;
+services.pipewire.alsa.support32Bit = true;
+services.pipewire.pulse.enable = true;
+@ %def sound.enable
+@ %def hardware.pulseaudio.enable
+@ %def security.rtkit.enable
+@ %def services.pipewire.enable
+@ %def services.pipewire.alsa.enable
+@ %def services.pipewire.alsa.support32Bit
+@ %def services.pipewire.pulse.enable
+\end{codechunk}
+
 @
 \end{codechunk}
 
