@@ -211,6 +211,20 @@ i18n.extraLocaleSettings.LC_COLLATE = "C.UTF-8";
 @ %def i18n.extraLocaleSettings.LC_COLLATE
 \end{codechunk}
 
+\section{Unfree packages}
+\label{sec:deod83sq}
+
+The \filename{configuration.nix} file that was created when I first
+installed NixOS allowed unfree packages to be installed on the
+computer.  I don't know why this was so, but it seems best to leave it
+as such.
+\begin{codechunk}
+\nextchunklabel{chk:gcdlllyw}
+<<Unfree packages setting>>=
+nixpkgs.config.allowUnfree = true;
+@ %def nixpkgs.config.allowUnfree
+\end{codechunk}
+
 @
 \end{codechunk}
 
