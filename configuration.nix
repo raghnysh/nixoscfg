@@ -17,14 +17,13 @@
   ## Other configuration files
   ## =================================================================
 
-  imports = let
-    homeManagerPath = builtins.fetchTarball {
+  imports = [
+    ./hardware-configuration.nix
+    "${builtins.fetchTarball {
       url = "https://github.com/nix-community/home-manager/archive/release-23.05.tar.gz";
       sha256 = "0rwzab51hnr6cmm1w5zmfh29gbkg6byv8jnr7frcv5kd6m8kna41";
-    };
-    homeManagerNixosModulePath = "${homeManagerPath}/nixos";
-  in
-    [ ./hardware-configuration.nix homeManagerNixosModulePath ];
+    }}/nixos"
+  ];
 
   ## =================================================================
   ## Bootloader
