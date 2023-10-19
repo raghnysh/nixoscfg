@@ -292,6 +292,29 @@ boot.loader.efi.canTouchEfiVariables = true;
 @ %def boot.loader.efi.canTouchEfiVariables
 \end{codechunk}
 
+\section{Graphical environment}
+\label{sec:ba88v5eg}
+
+For the graphical user interface of the NixOS operating system, I have
+left unchanged the original settings created by the NixOS installer.
+I did not explore these settings because I did not need to modify
+them.
+
+\begin{codechunk}
+\nextchunklabel{chk:vvehkrpj}
+<<Graphical environment settings>>=
+services.xserver.enable = true;
+services.xserver.displayManager.gdm.enable = true;
+services.xserver.desktopManager.gnome.enable = true;
+services.xserver.layout = "us";
+services.xserver.xkbVariant = "";
+@ %def services.xserver.enable
+@ %def services.xserver.displayManager.gdm.enable
+@ %def services.xserver.desktopManager.gnome.enable
+@ %def services.xserver.layout
+@ %def services.xserver.xkbVariant
+\end{codechunk}
+
 @
 \end{codechunk}
 
