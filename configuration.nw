@@ -124,14 +124,14 @@ home.stateVersion = "<<Common base version>>";
 \label{sec:wtcs4nl2}
 
 The networking setup is quite simple.  I just set the hostname of the
-computer, and hand over the control of everything else to the Network
-Manager application.
+computer, and hand over the control of everything else to the
+NetworkManager application \parencite{bib:abdahnqa}.
 
 \begin{codechunk}
 \nextchunklabel{chk:ldypnl10}
 <<Network settings>>=
 <<Hostname setting>>
-<<Pass control to Network Manager>>
+<<Pass control to NetworkManager>>
 @
 \end{codechunk}
 
@@ -139,13 +139,25 @@ Manager application.
 \nextchunklabel{chk:5f4lk1lm}
 <<Hostname setting>>=
 networking.hostName = "bastet";
-@
+@ %def networking.hostname
 \end{codechunk}
 
 \begin{codechunk}
 \nextchunklabel{chk:3jf5xa81}
-<<Pass control to Network Manager>>=
+<<Pass control to NetworkManager>>=
 networking.networkmanager.enable = true;
+@ %def networking.networkmanager.enable
+\end{codechunk}
+
+The users who need to control the NetworkManager application must be
+added to the appropriate user group:
+\begin{codechunk}
+\nextchunklabel{chk:oqyve0v3}
+<<NetworkManager group>>=
+networkmanager
+@ %def networkmanager
+\end{codechunk}
+
 @
 \end{codechunk}
 
