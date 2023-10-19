@@ -94,10 +94,10 @@ up varied configuration files scattered over the hard disk.)
 \label{sec:nfbc9c13}
 
 I first specify the base versions of NixOS and Home Manager.  NixOS
-and Home Manager will try to be compatible with the respective base
-versions whenever they are upgraded.  I installed Home Manager for the
-NixOS 23.05 release, so I will use that number as the common base
-version of both NiXOS and Home Manager.
+and Home Manager will try to remain compatible with the respective
+base versions whenever they are upgraded.  I installed Home Manager
+for the NixOS 23.05 release, so I will use that number as the common
+base version of both NiXOS and Home Manager.
 
 \begin{codechunk}
 \nextchunklabel{chk:v2y4tcc5}
