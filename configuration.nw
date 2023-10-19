@@ -274,6 +274,24 @@ settings.
 @
 \end{codechunk}
 
+\section{Bootloader}
+\label{sec:7vkm2mz8}
+
+The \firstterm{bootloader} is a program that is responsible for
+booting the computer \parencite{bib:rezy6nz0}.  The following settings
+are taken unchanged from the original file
+\filename{configuration.nix} that was created by the NixOS installer.
+I did not learn more about them because I did not need to modify them.
+
+\begin{codechunk}
+\nextchunklabel{chk:ci46g78f}
+<<Bootloader settings>>=
+boot.loader.systemd-boot.enable = true;
+boot.loader.efi.canTouchEfiVariables = true;
+@ %def boot.loader.systemd-boot.enable
+@ %def boot.loader.efi.canTouchEfiVariables
+\end{codechunk}
+
 @
 \end{codechunk}
 
