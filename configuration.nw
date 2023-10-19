@@ -225,6 +225,55 @@ nixpkgs.config.allowUnfree = true;
 @ %def nixpkgs.config.allowUnfree
 \end{codechunk}
 
+\section{Suspension on lid closure}
+\label{sec:9a4uflmp}
+
+I would like to suspend the computer when the laptop lid is closed, as
+was the case in my previous Linux Mint setup.  The default
+configuration of the system ensures that the computer is suspended
+when the laptop lid is closed and no external monitor is attached to
+the laptop.  It takes a bit of configuration to ensure that the
+computer is suspended when the laptop lid is closed and an external
+monitor is attached to the laptop.
+
+Suspension is controlled by a system service called
+\firstterm{systemd-logind} \parencite{bib:x9v7o65s}.  The settings of
+this service are specified in a file called \filename{logind.conf}
+\parencite{bib:p9pioc5i}.  I specify that the \nwverb|systemd-logind|
+service should suspend the computer when the laptop lid is closed and
+an external monitor is attached to the laptop.
+\begin{codechunk}
+\nextchunklabel{chk:uhhhefz3}
+<<Logind setting for lid closure>>=
+services.logind.lidSwitchDocked = "suspend";
+@ %def services.logind.lidSwitchDocked
+\end{codechunk}
+
+This does not work because the system-wide power manager
+\firstterm{UPower} also tries to control what happens when the laptop
+lid is closed \parencite{bib:872u2noz}.  It seems to inhibit the
+suspension of the computer by \nwverb|systemd-logind| when the lid is
+closed in the presence of an external monitor.  I therefore specify
+that \nwverb|UPower| should ignore the laptop lid.
+\begin{codechunk}
+\nextchunklabel{chk:vj3wncpe}
+<<UPower setting for laptop lid>>=
+services.upower.ignoreLid = true;
+@ %def services.upower.ignoreLid
+\end{codechunk}
+I learnt of the role of \nwverb|UPower| in this issue from an article
+by \textcite{bib:d08j7tjg}.
+
+I now combine the \nwverb|systemd-logind| and \nwverb|UPower|
+settings.
+\begin{codechunk}
+\nextchunklabel{chk:i0bdh589}
+<<Lid closure settings>>=
+<<Logind setting for lid closure>>
+<<UPower setting for laptop lid>>
+@
+\end{codechunk}
+
 @
 \end{codechunk}
 
