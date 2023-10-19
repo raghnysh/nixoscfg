@@ -427,6 +427,36 @@ set.
 \end{codechunk}
 That completes the declaration of my user profile.
 
+\section{General settings of Home Manager}
+\label{sec:jpohtaim}
+
+The settings for Nixpkgs \parencite{bib:krparfs8}, the software
+packaging system of NixOS, can be specified either through the system
+configuration that applies to all users, or through the Home Manager
+configuration that applies only to specific users.  According to the
+Home Manager manual \parencite{bib:p9hb002v}, the former method
+``saves an extra Nixpkgs evaluation, adds consistency, and removes the
+dependency on NIX\_PATH'', so I use it.
+\begin{codechunk}
+\nextchunklabel{chk:spfjj8sn}
+<<General settings of Home Manager>>=
+home-manager.useGlobalPkgs = true;
+@
+\end{codechunk}
+
+Home Manager by default installs Nixpkgs packages in a directory under
+my home directory.  Alternatively, there is an option which makes Home
+Manager install these packages in a user-specific directory under
+\filename{/etc/}.  The Home Manager manual \parencite{bib:p9hb002v}
+says that this ``option may become the default value in the future'',
+so I choose this option.
+\begin{codechunk}
+\nextchunklabel{chk:nb5ml4v1}
+<<General settings of Home Manager>>=
+home-manager.useUserPackages = true;
+@
+\end{codechunk}
+
 @
 \end{codechunk}
 
