@@ -505,6 +505,24 @@ imports = [
 @
 \end{codechunk}
 
+\section{Copy of the configuration}
+\label{sec:pai37tz6}
+
+This setting specifies that the file
+\filename{/etc/nixos/configuration.nix} should be copied to the Nix
+store, and that a symbolic link to that copy should be created from
+\filename{/run/current-system/configuration.nix}.  I turn this setting
+on because I find it useful, when making a sequence of configuration
+changes that have not yet been committed to Git, to look at the
+configuration that was current when the last \nwverb|nixos-rebuild|
+command was issued.
+\begin{codechunk}
+\nextchunklabel{chk:sgsxqbsc}
+<<Copy of configuration>>=
+system.copySystemConfiguration = true;
+@
+\end{codechunk}
+
 \section{Assembling the configuration file}
 \label{sec:p9imo12d}
 
@@ -514,6 +532,7 @@ imports = [
 {
   <<Imports setting>>
   <<System base version setting>>
+  <<Copy of configuration>>
   <<Bootloader settings>>
   <<Network settings>>
   <<Time zone setting>>
