@@ -520,7 +520,7 @@ command was issued.
 \nextchunklabel{chk:sgsxqbsc}
 <<Copy of configuration>>=
 system.copySystemConfiguration = true;
-@
+@ %def system.copySystemConfiguration
 \end{codechunk}
 
 \section{Assembling the configuration file}
