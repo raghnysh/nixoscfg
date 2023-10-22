@@ -74,7 +74,7 @@ parameters that affect just the current user, that is, me.
 The system settings are fully documented in the man page of
 \filename{configuration.nix} \parencite{bib:5ndx9q4j}.  As for the
 user settings, I use the NixOS module \emph{Home Manager}, which
-enables me to include the user settings also in the file
+enables me to include the user settings also in the system file
 \filename{configuration.nix}.  The settings provided by Home Manager
 are documented in the man page of \filename{home-configuration.nix}
 \parencite{bib:vxfvl1fo}.
