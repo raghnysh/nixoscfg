@@ -55,6 +55,7 @@
 
 \section{Introduction}
 \label{sec:xikfhzau}
+%\markboth{}{Inroduction}
 
 This document describes my NixOS configuration.  I use the Noweb
 literate programming system to obtain from this document a NixOS
@@ -90,7 +91,10 @@ it means that I only have to keep track of this one file for the
 entire configuration of the computer.  No more worries about backing
 up varied configuration files scattered over the hard disk.)
 
-\section{Base versions}
+\section{System settings}
+\label{sec:plqdxsb9}
+
+\subsection{Base versions}
 \label{sec:nfbc9c13}
 
 I first specify the base versions of NixOS and Home Manager.  NixOS
@@ -120,7 +124,7 @@ home.stateVersion = "<<Common base version>>";
 @ %def home.stateVersion
 \end{codechunk}
 
-\section{Networking}
+\subsection{Networking}
 \label{sec:wtcs4nl2}
 
 The networking setup is quite simple.  I just set the hostname of the
@@ -158,7 +162,7 @@ networkmanager
 @ %def networkmanager
 \end{codechunk}
 
-\section{Date and time}
+\subsection{Date and time}
 \label{sec:jhrur9yx}
 
 The date and time settings are specified by the time zone.
@@ -169,7 +173,7 @@ time.timeZone = "Asia/Kolkata";
 @ %def time.timeZone
 \end{codechunk}
 
-\section{Locale settings}
+\subsection{Locale settings}
 \label{sec:3dmlfks5}
 
 \firstterm{Locale} settings specify the language used on this system
@@ -211,7 +215,7 @@ i18n.extraLocaleSettings.LC_COLLATE = "C.UTF-8";
 @ %def i18n.extraLocaleSettings.LC_COLLATE
 \end{codechunk}
 
-\section{Unfree packages}
+\subsection{Unfree packages}
 \label{sec:deod83sq}
 
 The \filename{configuration.nix} file that was created when I first
@@ -225,7 +229,7 @@ nixpkgs.config.allowUnfree = true;
 @ %def nixpkgs.config.allowUnfree
 \end{codechunk}
 
-\section{Suspension on lid closure}
+\subsection{Suspension on lid closure}
 \label{sec:9a4uflmp}
 
 I would like to suspend the computer when the laptop lid is closed, as
@@ -274,7 +278,7 @@ settings.
 @
 \end{codechunk}
 
-\section{Bootloader}
+\subsection{Bootloader}
 \label{sec:7vkm2mz8}
 
 The \firstterm{bootloader} is a program that is responsible for
@@ -292,7 +296,7 @@ boot.loader.efi.canTouchEfiVariables = true;
 @ %def boot.loader.efi.canTouchEfiVariables
 \end{codechunk}
 
-\section{Graphical environment}
+\subsection{Graphical environment}
 \label{sec:ba88v5eg}
 
 For the graphical user interface of the NixOS operating system, I have
@@ -315,7 +319,7 @@ services.xserver.xkbVariant = "";
 @ %def services.xserver.xkbVariant
 \end{codechunk}
 
-\section{Printing}
+\subsection{Printing}
 \label{sec:9z18mjmr}
 
 I have kept the configuration of the printing software as it was
@@ -328,7 +332,7 @@ services.printing.enable = true;
 @ %def services.printing.enable
 \end{codechunk}
 
-\section{Sound}
+\subsection{Sound}
 \label{sec:5vk5vbq4}
 
 The settings for the sound input and output systems are kept unchanged
@@ -355,7 +359,28 @@ services.pipewire.pulse.enable = true;
 @ %def services.pipewire.pulse.enable
 \end{codechunk}
 
-\section{My user profile}
+\subsection{Copy of the configuration}
+\label{sec:pai37tz6}
+
+This setting specifies that the file
+\filename{/etc/nixos/configuration.nix} should be copied to the Nix
+store, and that a symbolic link to that copy should be created from
+\filename{/run/current-system/configuration.nix}.  I turn this setting
+on because I find it useful, when making a sequence of configuration
+changes that have not yet been committed to Git, to look at the
+configuration that was current when the last \nwverb|nixos-rebuild|
+command was issued.
+\begin{codechunk}
+\nextchunklabel{chk:sgsxqbsc}
+<<Copy of configuration>>=
+system.copySystemConfiguration = true;
+@ %def system.copySystemConfiguration
+\end{codechunk}
+
+\section{User settings}
+\label{sec:6x3u5wbd}
+
+\subsection{My user profile}
 \label{sec:qopaextu}
 
 My username on this computer is
@@ -427,7 +452,10 @@ set.
 \end{codechunk}
 That completes the declaration of my user profile.
 
-\section{General settings of Home Manager}
+\section{Consolidation}
+\label{sec:89cb2h40}
+
+\subsection{General settings of Home Manager}
 \label{sec:jpohtaim}
 
 The settings for Nixpkgs \parencite{bib:krparfs8}, the software
@@ -457,7 +485,7 @@ home-manager.useUserPackages = true;
 @
 \end{codechunk}
 
-\section{Embedding the Home Manager configuration}
+\subsection{Embedding the Home Manager configuration}
 \label{sec:o3ar6a7a}
 
 I embed the Home Manager configuration into the system settings file
@@ -492,7 +520,7 @@ builtins.fetchTarball {
 @
 \end{codechunk}
 
-\section{Import of modules}
+\subsection{Import of modules}
 \label{sec:wk15aj6o}
 
 \begin{codechunk}
@@ -505,25 +533,7 @@ imports = [
 @
 \end{codechunk}
 
-\section{Copy of the configuration}
-\label{sec:pai37tz6}
-
-This setting specifies that the file
-\filename{/etc/nixos/configuration.nix} should be copied to the Nix
-store, and that a symbolic link to that copy should be created from
-\filename{/run/current-system/configuration.nix}.  I turn this setting
-on because I find it useful, when making a sequence of configuration
-changes that have not yet been committed to Git, to look at the
-configuration that was current when the last \nwverb|nixos-rebuild|
-command was issued.
-\begin{codechunk}
-\nextchunklabel{chk:sgsxqbsc}
-<<Copy of configuration>>=
-system.copySystemConfiguration = true;
-@ %def system.copySystemConfiguration
-\end{codechunk}
-
-\section{Assembling the configuration file}
+\subsection{Assembling the configuration file}
 \label{sec:p9imo12d}
 
 \begin{codechunk}
