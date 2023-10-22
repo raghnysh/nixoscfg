@@ -36,6 +36,7 @@
   includehead = true,
   headheight = 15 pt,
   headsep = \baselineskip,
+  includefoot = true,
   twoside = false
 ]
   { geometry }
@@ -49,10 +50,22 @@
 \fancyhf {}
 \fancyhead [ L ] { \nouppercase { \rightmark } }
 \fancyhead [ R ] { \thepage }
+\fancyfoot [ C ] { \nouppercase { \leftmark } }
+
+\cs_gset:cpn { footrulewidth }
+  { 0.4 pt }
+
+\AddToHook { cmd / section / before }
+  { \clearpage }
 
 \cs_gset:cpn { sectionmark } #1
   {
-    \markright { \S ~ \thesection. ~ #1 }
+    \markboth { \thesection. ~ #1 } {}
+  }
+
+\cs_gset:cpn { subsectionmark } #1
+  {
+    \markright { \thesubsection. ~ #1 }
   }
 
 %% ===================================================================
@@ -97,8 +110,10 @@
 
 \tocloftpagestyle { fancy }
 
-\AddToHook { cmd / tableofcontents / after }
-  { \clearpage }
+\cs_gset:cpn { cftmarktoc }
+  {
+    \markboth { Contents } {}
+  }
 
 %% ===================================================================
 %% Bibliography
@@ -155,15 +170,22 @@
     urlseen = { seen }
   }
 
+\defbibheading { mybibliography }
+  [ \bibname ]
+  {
+    \section* {#1}
+    \markboth {#1} {}
+    \addcontentsline { toc }{ section } {#1}
+  }
+
 \NewDocumentCommand \bibsection
   { O{References} }
   {
     \clearpage
     \phantomsection
-    \markright {#1}
     \printbibliography
       [
-        heading = bibintoc,
+        heading = mybibliography,
         title = #1
       ]
   }
@@ -248,7 +270,7 @@
     \phantomsection
     \addcontentsline { toc }{ section } {#1}
     \section* {#1}
-    \markright {#1}
+    \markboth {#1} {}
     \nowebchunks
   }
 
@@ -258,7 +280,7 @@
     \clearpage
     \phantomsection
     \addcontentsline { toc }{ section } {#1}
-    \markright {#1}
+    \markboth {#1} {}
     \section* {#1}
     \nowebindex
   }
