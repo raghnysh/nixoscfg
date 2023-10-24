@@ -1,4 +1,4 @@
-%%% Beginning of file `configuration.nw'
+%%% My NixOS configuration
 
 %% Author: Raghavendra Nyshadham <rn@raghnysh.com>
 %%
@@ -602,4 +602,4 @@ imports = [
 
 \end{document}
 
-%%% End of file `configuration.nw'
+%%% End of file
