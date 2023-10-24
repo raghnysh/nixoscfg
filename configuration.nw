@@ -420,7 +420,7 @@ administrative tasks on the computer using the \nwverb|sudo| command.
 \nextchunklabel{chk:p7mkklj7}
 <<My user groups>>=
 wheel
-@ %def wheel
+@
 \end{codechunk}
 I also have to be able to control the NetworkManager application to
 make changes to the network configuration whenever needed, so I have
