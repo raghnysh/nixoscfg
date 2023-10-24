@@ -43,8 +43,8 @@
   \begin{abstract}
     This document describes my NixOS configuration.  I use the Noweb
     literate programming system to obtain from this document a NixOS
-    configuration file and a PDF file of the document.  The current
-    version of the document is available at
+    configuration file and a PDF rendition of the document.  The
+    current version of the document is available at
     \url{https://github.com/raghnysh/nixoscfg}.
 
     \ghtopics{nixos, system-configuration}
@@ -59,7 +59,7 @@
 
 This document describes my NixOS configuration.  I use the Noweb
 literate programming system to obtain from this document a NixOS
-configuration file and a PDF file of the document.  The current
+configuration file and a PDF rendition of the document.  The current
 version of the document is available at
 \url{https://github.com/raghnysh/nixoscfg}.
 
