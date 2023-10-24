@@ -159,7 +159,7 @@ added to the appropriate user group:
 \nextchunklabel{chk:oqyve0v3}
 <<NetworkManager group>>=
 networkmanager
-@ %def networkmanager
+@
 \end{codechunk}
 
 \subsection{Date and time}
