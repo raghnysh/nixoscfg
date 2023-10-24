@@ -383,14 +383,8 @@ system.copySystemConfiguration = true;
 \subsection{My user profile}
 \label{sec:qopaextu}
 
-My username on this computer is
-\begin{codechunk}
-\nextchunklabel{chk:wqb5wrwq}
-<<My username>>=
-raghnysh
-@ %def raghnysh
-\end{codechunk}
-which is an abbreviation of my name
+My username on this computer is \nwverb|raghnysh|, which is an
+abbreviation of my name
 \begin{codechunk}
 \nextchunklabel{chk:inddl4ui}
 <<My name>>=
@@ -399,18 +393,15 @@ Raghavendra Nyshadham
 \end{codechunk}
 
 My user profile is configured through the attribute set
-\begin{codechunk}
-\nextchunklabel{chk:wcdabdty}
-<<My user profile>>=
-users.users.<<My username>>
-@ %def users.users.raghnysh
-\end{codechunk}
+\begin{verbatim}
+users.users.raghnysh
+\end{verbatim}
 
 The first attribute I add to my user profile set is my name:
 \begin{codechunk}
 \nextchunklabel{chk:4n5aawhc}
 <<My user profile settings>>=
-<<My user profile>>.description = "<<My name>>";
+users.users.raghnysh.description = "<<My name>>";
 @ %def users.users.raghnysh.description
 \end{codechunk}
 
@@ -419,7 +410,7 @@ I am a ``real'' user as opposed to a ``system'' user such as the user
 \begin{codechunk}
 \nextchunklabel{chk:ynaxhugb}
 <<My user profile settings>>=
-<<My user profile>>.isNormalUser = true;
+users.users.raghnysh.isNormalUser = true;
 @ %def users.users.raghnysh.isNormalUser
 \end{codechunk}
 
@@ -445,7 +436,7 @@ set.
 \begin{codechunk}
 \nextchunklabel{chk:2ddciyul}
 <<My user profile settings>>=
-<<My user profile>>.extraGroups = [
+users.users.raghnysh.extraGroups = [
   <<My user groups>>
 ];
 @ %def users.users.raghnysh.extraGroups
