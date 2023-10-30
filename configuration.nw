@@ -41,7 +41,8 @@
   \maketitle
 
   \begin{abstract}
-    This document describes my NixOS configuration.  I use the Noweb
+    This document describes the configuration of the operating system
+    of my computer, the Linux distribution NixOS.  I use the Noweb
     literate programming system to obtain from this document a NixOS
     configuration file and a PDF rendition of the document.  The
     current version of the document is available at
@@ -57,11 +58,29 @@
 \label{sec:xikfhzau}
 %\markboth{}{Inroduction}
 
-This document describes my NixOS configuration.  I use the Noweb
-literate programming system to obtain from this document a NixOS
-configuration file and a PDF rendition of the document.  The current
-version of the document is available at
-\url{https://github.com/raghnysh/nixoscfg}.
+This document describes the configuration of the operating system of
+my computer, the Linux distribution NixOS.  I use the Noweb literate
+programming system to obtain from this document a NixOS configuration
+file and a PDF rendition of the document.  The current version of the
+document is available at \url{https://github.com/raghnysh/nixoscfg}.
+
+\subsection{Prerequisites}
+\label{sec:prctvuey}
+
+This document depends on a knowledge of the basics of the Nix package
+manager \parencite{bib:q7nwwdbe} which is the basis of NixOS, the
+Nixpkgs framework \parencite{bib:krparfs8} which provides the packages
+and other software components of NixOS, and of course of the operating
+system NixOS itself \parencite{bib:8n2stl3b}.  It also depends on a
+knowledge of the Noweb literate programming system
+\parencite{bib:199mna1w} in whose markup language it is written, and
+whose tools are used to process it.  Apart from these, it of course
+depends on a knowledge of the basic settings of some of the software
+packages that are configured in it, such as Bash and Emacs, for which
+the manuals of these packages are the obvious sources of information.
+
+\subsection{System settings and user settings}
+\label{sec:rf3avzmc}
 
 The NixOS configuration consists of a single file
 \filename{configuration.nix}, which is located in the directory
@@ -74,11 +93,12 @@ parameters that affect just the current user, that is, me.
 
 The system settings are fully documented in the man page of
 \filename{configuration.nix} \parencite{bib:5ndx9q4j}.  As for the
-user settings, I use the NixOS module \emph{Home Manager}, which
-enables me to include the user settings also in the system file
-\filename{configuration.nix}.  The settings provided by Home Manager
-are documented in the man page of \filename{home-configuration.nix}
-\parencite{bib:vxfvl1fo}.
+user settings, I use the \emph{Home Manager} tool for declaratively
+configuring my user environment.  More specifically, I use the NixOS
+module provided by Home Manager, which enables me to include the user
+settings also in the system file \filename{configuration.nix}.  The
+settings provided by Home Manager are documented in the man page of
+\filename{home-configuration.nix} \parencite{bib:vxfvl1fo}.
 
 Without the Home Manager NixOS module, the user settings would be
 distributed over multiple files in my home directory, such as
@@ -91,8 +111,100 @@ it means that I only have to keep track of this one file for the
 entire configuration of the computer.  No more worries about backing
 up varied configuration files scattered over the hard disk.)
 
+So those then are the two components of my NixOS configuration: system
+settings and user settings.  These two groups of settings are tied
+together using some basic Nix language constructs in the file
+\filename{configuration.nix} to form a valid Nix expression.  This Nix
+expression fully specifies the configuration of my NixOS system.
+
+\subsection{Overview of the document}
+\label{sec:7ies7w0n}
+
+In this paragraph and the next few, I will describe an outline of the
+rest of this document.  In the next section, which is
+\Cref{sec:plqdxsb9}, I will describe the system settings.  Each
+subsection of that section describes the settings of a particular
+subsystem of the computer, such as the sound subsystem, or the
+graphical interface.  Some of these settings were specified by the
+NixOS installer (by which I mean the NixOS installation program)
+itself and left unchanged by me, while some are specified by me.
+Whenever I use settings declared by the installer without any change,
+I will indicate that fact in the appropriate subsection.
+
+I will describe the user settings in \Cref{sec:6x3u5wbd}.  Each
+subsection of that section is about the configuration of a particular
+user program, except for the subsections on the configuration of
+Emacs; my configuration of Emacs is long enough that it is convenient
+to break it into multiple subsections.  Other important parts of this
+section are those on the configuration of Bash, Readline, and
+\TeX\ Live.
+
+In \Cref{sec:89cb2h40}, I will describe how to combine the system
+settings and the user settings to derive the Nix expression that
+specifies the full NixOS configuration.  I will first specify the
+import of the Home Manager NixOS module and other necessary modules.
+I will then describe how to use the constructs provided by some of
+these modules to incorporate the user settings into the general
+configuration to obtain the final Nix expression.
+
+In the last section, which is \Cref{sec:mhymr3fu}, I will say
+something about the process of writing this document.  This is my
+first stab at literate configuration, in fact at literate anything,
+and I want to note to myself some of the difficulties that I ran into
+during this process.  It may guide me in my future efforts in literate
+programming.
+
+At the end of the document is a bibliography of some of the references
+that I have used, a list of the code chunks of the document, and
+another of the identifiers described in the document.
+
+\subsection{Colophon}
+\label{sec:a06mny9n}
+
+This document is written using the \LaTeX\ class \nwverb|article|,
+with customisations that are contained in the \LaTeX\ file
+\filename{configuration.sty} that accompanies the Noweb source of this
+document.
+
+As is common, the page layout is done with the \LaTeX\ package
+\nwverb|geometry|, and the headers and footers of the pages are made
+using the package \nwverb|fancyhdr|.  The page layout settings are
+mostly copied from the file \filename{hott-ebook.tex} of the HoTT book
+project (\url{https://github.com/HoTT/book}); I find the PDF ebook
+product of that project very pleasant to read.
+
+There are two levels of division in the document: \nwverb|section| and
+\nwverb|subsection|.  The titles and numbers of these divisions, and
+the page numbers, form the content of the headers and footers of the
+pages.  I begin each section on a new page because I find that doing
+so gives the best match between the header and footer of each page and
+the content of that page.
+
+Pages on which sections begin have no headers other than page numbers;
+this is also true of pages belonging to sections without subsections
+such as the sections containing the table of contents, the
+bibliography, etc.  This is an idiosyncracy caused by the way I use
+the \LaTeX\ page marking commands \nwverb|\markboth| and
+\nwverb|\markright|, but I find that it distinguishes such pages
+clearly from other pages.
+
+The main font of the document is Palatino from the \LaTeX\ pacakge
+\nwverb|newpxtext|, and the monospace font is Inconsolata from the
+package \nwverb|inconsolata|.
+
+The literate programming components of the document, such as code
+chunks and cross-references to them, are provided by the \LaTeX\
+package \nwverb|noweb|.  The NixOS configuration file is extracted
+from the document using the program \nwverb|notangle|, and a \LaTeX\
+version of the document is produced using the programs
+\nwverb|noweave|; both these programs belong to the Noweb system.  The
+PDF rendition of the document is made from the \LaTeX\ version of it
+using the build system \nwverb|latexmk|.
+
 \section{System settings}
 \label{sec:plqdxsb9}
+
+\kant[1-2]
 
 \subsection{Base versions}
 \label{sec:nfbc9c13}
@@ -380,6 +492,8 @@ system.copySystemConfiguration = true;
 \section{User settings}
 \label{sec:6x3u5wbd}
 
+\kant[1-2]
+
 \subsection{My user profile}
 \label{sec:qopaextu}
 
@@ -445,6 +559,8 @@ That completes the declaration of my user profile.
 
 \section{Consolidation}
 \label{sec:89cb2h40}
+
+\kant[1-2]
 
 \subsection{The Home Manager NixOS module}
 \label{sec:6afjlq40}
@@ -593,6 +709,21 @@ imports = [
 }
 @
 \end{codechunk}
+
+\section{Coda}
+\label{sec:mhymr3fu}
+
+\kant[1-2]
+
+\subsection{The difficulties of literate configuration}
+\label{sec:gwzq6dz9}
+
+\kant[3-4]
+
+\subsection{Literate programming in interpreted languages}
+\label{sec:lg4xtyfn}
+
+\kant[5-6]
 
 \bibsection
 
