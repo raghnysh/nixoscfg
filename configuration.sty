@@ -36,7 +36,6 @@
   includehead = true,
   headheight = 15 pt,
   headsep = \baselineskip,
-  includefoot = true,
   twoside = false
 ]
   { geometry }
@@ -48,12 +47,14 @@
 \RequirePackage { fancyhdr }
 \pagestyle { fancy }
 \fancyhf {}
-\fancyhead [ L ] { \nouppercase { \rightmark } }
-\fancyhead [ R ] { \thepage }
-\fancyfoot [ C ] { \nouppercase { \leftmark } }
 
-\cs_gset:cpn { footrulewidth }
-  { 0.4 pt }
+\fancyhead [ L ]
+  {
+    \nouppercase { \leftmark }
+    \nouppercase { \rightmark }
+  }
+
+\fancyhead [ R ] { \thepage }
 
 \AddToHook { cmd / section / before }
   { \clearpage }
@@ -65,7 +66,7 @@
 
 \cs_gset:cpn { subsectionmark } #1
   {
-    \markright { \thesubsection. ~ #1 }
+    \markright { ~ \textbar{} ~ \thesubsection. ~ #1 }
   }
 
 %% ===================================================================
