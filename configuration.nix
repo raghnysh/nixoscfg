@@ -346,6 +346,10 @@
       (global-auto-revert-mode 1)
       (global-display-fill-column-indicator-mode 1)
       (add-hook 'text-mode-hook 'turn-on-auto-fill)
+      (add-hook 'text-mode-hook 'turn-on-flyspell)
+      (setq make-backup-files nil)
+      (setq ispell-alternate-dictionary "/etc/profiles/per-user/raghnysh/share/dict/wbritish.txt")
+      (setq ispell-silently-savep t)
       (tab-bar-mode 1)
 
       (setq-default compilation-scroll-output 'first-error)
@@ -583,10 +587,19 @@
       texlivePackageNoCollisions = texlivePackage.override {
         ignoreCollisions = true;
       };
+      aspellPackage = pkgs.aspellWithDicts (dicts:
+        with dicts; [
+          en
+          en-computers
+          en-science
+        ]
+      );
     in
       [
+        aspellPackage
         pkgs.gnumake
         pkgs.noweb
+        pkgs.scowl
         texlivePackageNoCollisions
       ];
   };
