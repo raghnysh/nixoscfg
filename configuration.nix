@@ -293,6 +293,7 @@
       (menu-bar-mode -1)
       (tool-bar-mode -1)
       (set-scroll-bar-mode nil)
+      (load-theme 'modus-operandi)
       (defvar my-laptop-monitor-font "DejaVu Sans Mono 18")
       (defvar my-external-monitor-font "DejaVu Sans Mono 14")
       (modify-all-frames-parameters `((font . ,my-laptop-monitor-font)))
