@@ -204,7 +204,7 @@ using the build system \nwverb|latexmk|.
 \section{System settings}
 \label{sec:plqdxsb9}
 
-\kant[1-2]
+\lipsum[1-2]
 
 \subsection{Base versions}
 \label{sec:nfbc9c13}
@@ -492,7 +492,7 @@ system.copySystemConfiguration = true;
 \section{User settings}
 \label{sec:6x3u5wbd}
 
-\kant[1-2]
+\lipsum[1-2]
 
 \subsection{My user profile}
 \label{sec:qopaextu}
@@ -560,7 +560,7 @@ That completes the declaration of my user profile.
 \section{Consolidation}
 \label{sec:89cb2h40}
 
-\kant[1-2]
+\lipsum[1-2]
 
 \subsection{The Home Manager NixOS module}
 \label{sec:6afjlq40}
@@ -713,17 +713,17 @@ imports = [
 \section{Coda}
 \label{sec:mhymr3fu}
 
-\kant[1-2]
+\lipsum[1-2]
 
 \subsection{The difficulties of literate configuration}
 \label{sec:gwzq6dz9}
 
-\kant[3-4]
+\lipsum[3-4]
 
 \subsection{Literate programming in interpreted languages}
 \label{sec:lg4xtyfn}
 
-\kant[5-6]
+\lipsum[5-6]
 
 \bibsection
 
