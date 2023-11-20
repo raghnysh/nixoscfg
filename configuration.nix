@@ -346,6 +346,7 @@
       (global-auto-revert-mode 1)
       (global-display-fill-column-indicator-mode 1)
       (add-hook 'text-mode-hook 'turn-on-auto-fill)
+      (tab-bar-mode 1)
 
       (setq-default compilation-scroll-output 'first-error)
       (setq my-compilation-frame-name "compilation")
