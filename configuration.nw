@@ -557,6 +557,75 @@ users.users.raghnysh.extraGroups = [
 \end{codechunk}
 That completes the declaration of my user profile.
 
+\subsection{Custom keybindings}
+\label{sec:gnyboe66}
+
+I want keyboard shortcuts for a few frequently used commands.  The
+shortcuts are configured through the \firstterm{dconf} system
+\parencite{bib:2jswiol0}.  The dconf settings consist of certain keys
+and their values.  Related keys are gathered into \emph{groups}.  In
+NixOS a dconf setting is specified by an attribute of the form
+\begin{verbatim}
+dconf.settings."<group>".key = value;
+\end{verbatim}
+
+Thus, keyboard shortcuts are configured by the attribute
+\begin{codechunk}
+\nextchunklabel{chk:ywnwef13}
+<<Keyboard shortcuts setting>>=
+dconf.settings."<<kbs-group>>".<<kbs-key>> = <<kbs-value>>;
+@
+\end{codechunk}
+The dconf group under which keyboard shortcuts are configured looks
+like a relative path:
+\begin{codechunk}
+\nextchunklabel{chk:q91ldjml}
+<<kbs-group>>=
+org/gnome/settings-daemon/plugins/media-keys
+@
+\end{codechunk}
+The dconf key associated with keyboard shortcuts is
+\begin{codechunk}
+\nextchunklabel{chk:c4puclwq}
+<<kbs-key>>=
+custom-keybindings
+@
+\end{codechunk}
+The value of this key is a list of the form
+\begin{verbatim}
+["/<shortcut1-group/" "/shortcut2-group/" ...]
+\end{verbatim}
+The first member \nwverb|shortcut1-group| of this list is a dconf
+group that configures the keyboard shortcut \nwverb|shortcut1|; the
+other members configure other keyboard shortcuts.  I am configuring
+only one keyboard shortcut \textemdash{} whose effect will be to
+suspend the computer \textemdash{} so I have only one member in this
+list:
+\begin{codechunk}
+\nextchunklabel{chk:rldqngod}
+<<kbs-value>>=
+["/<<suspend-group>>/"]
+@
+\end{codechunk}
+where
+\begin{codechunk}
+\nextchunklabel{chk:ta5kmggo}
+<<suspend-group>>=
+<<kbs-group>>/<<kbs-key>>/suspend
+@
+\end{codechunk}
+
+The \nwverb|suspend| group has three keys: \nwverb|name|,
+\nwverb|binding|, and \nwverb|command|.
+\begin{codechunk}
+\nextchunklabel{chk:bu6iiooz}
+<<Keyboard shortcut for suspending the computer>>=
+dconf.settings.<<suspend-group>>.name = "Suspend the computer";
+dconf.settings.<<suspend-group>>.binding = "Pause";
+dconf.settings.<<suspend-group>>.command = "systemctl suspend";
+@
+\end{codechunk}
+
 \section{Consolidation}
 \label{sec:89cb2h40}
 
@@ -705,6 +774,7 @@ imports = [
   <<General settings of Home Manager>>
   <<Home Manager user attribute name>> = { pkgs, ... }: {
     <<Home Manager base version setting>>
+    <<Keyboard shortcuts setting>>
   };
 }
 @
