@@ -576,6 +576,7 @@ Thus, keyboard shortcuts are configured by the attribute
 dconf.settings."<<kbs-group>>".<<kbs-key>> = <<kbs-value>>;
 @
 \end{codechunk}
+
 The dconf group under which keyboard shortcuts are configured looks
 like a relative path:
 \begin{codechunk}
@@ -620,11 +621,31 @@ The \nwverb|suspend| group has three keys: \nwverb|name|,
 \begin{codechunk}
 \nextchunklabel{chk:bu6iiooz}
 <<Keyboard shortcut for suspending the computer>>=
-dconf.settings.<<suspend-group>>.name = "Suspend the computer";
-dconf.settings.<<suspend-group>>.binding = "Pause";
-dconf.settings.<<suspend-group>>.command = "systemctl suspend";
+dconf.settings."<<suspend-group>>".name = "Suspend the computer";
+dconf.settings."<<suspend-group>>".binding = "Pause";
+dconf.settings."<<suspend-group>>".command = "systemctl suspend";
 @
 \end{codechunk}
+The first of these settings specifies a name for the keyboard
+shortcut, the second the key to press to invoke the shortcut, and the
+last the command that is run when that key is pressed.  The keyboard
+of my computer does not have a \nwverb|Pause| key, and emulates it
+with the key-sequence \nwverb|Fn-P| \parencite[page 17]{bib:17rt0kuy}.
+
+I now add these dconf settings to the general keyboard shortcut
+setting.
+\begin{codechunk}
+\nextchunklabel{chk:cq0hpl7a}
+<<Keyboard shortcuts setting>>=
+<<Keyboard shortcut for suspending the computer>>
+@
+\end{codechunk}
+
+After I wrote this, I found from \textcite[page 17]{bib:17rt0kuy} that
+the key sequence \nwverb|Fn-4| suspends the computer, but I am keeping
+these settings as a reminder of how to set custom key bindings in the
+file \filename{configuration.nix}.
+
 
 \section{Consolidation}
 \label{sec:89cb2h40}
