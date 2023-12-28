@@ -646,6 +646,58 @@ the key sequence \nwverb|Fn-4| suspends the computer, but I am keeping
 these settings as a reminder of how to set custom key bindings in the
 file \filename{configuration.nix}.
 
+\subsection{Notifications when the screen is locked}
+\label{sec:7vjgnoba}
+
+The desktop environment that comes with my installation of NixOs is
+GNOME \parencite{bib:g6po8v4w}.  GNOME seems, by default, to lock the
+display screen when the computer is inactive for five minutes.  When I
+activate the screen again by typing a character, the locked screen
+shows system notifications.  These notifications seem irrelevant to
+me.  For example, one common notification is about the GNOME
+application \textit{Characters} that is used to insert special
+characters; I have never used this application, and have no clue why
+it appears.
+
+In any case, I don't need system notifications to appear on a locked
+screen.  I will read them when I am working on the computer.  So the
+simplest way to stop irrelevant notifications from showing on a locked
+screen is to disable all notifications from showing on a locked
+screen.  There is a dconf setting for this:
+\begin{codechunk}
+\nextchunklabel{chk:gswpdseh}
+<<Locked-screen notifications setting>>=
+dconf.settings."<<lsns-group>>".<<lsns-key>> = <<lsns-value>>;
+@
+\end{codechunk}
+
+The dconf group containing the configuration of notifications is, like
+other dconf groups, something which looks like a relative path:
+\begin{codechunk}
+\nextchunklabel{chk:5dd2mo9f}
+<<lsns-group>>=
+org/gnome/desktop/notifications
+@
+\end{codechunk}
+The dconf key associated with the display of notifications when the
+screen is locked is
+\begin{codechunk}
+\nextchunklabel{chk:pjnpkhiw}
+<<lsns-key>>=
+show-in-lock-screen
+@
+\end{codechunk}
+The value of this key is a Boolean: either \nwverb|true| or
+\nwverb|false|.  I choose the latter because I don't want
+notifications when the screen is locked.
+\begin{codechunk}
+\nextchunklabel{chk:o1mruafo}
+<<lsns-value>>=
+false
+@
+\end{codechunk}
+I learnt about the dconf key \nwverb|show-in-lock-screen| from
+\textcite{bib:m73nxfks}.
 
 \section{Consolidation}
 \label{sec:89cb2h40}
@@ -796,6 +848,7 @@ imports = [
   <<Home Manager user attribute name>> = { pkgs, ... }: {
     <<Home Manager base version setting>>
     <<Keyboard shortcuts setting>>
+    <<Locked-screen notifications setting>>
   };
 }
 @
