@@ -795,6 +795,44 @@ imports = [
 
 \lipsum[5-6]
 
+\section{Failure}
+\label{sec:wzm7cwrh}
+
+This document is not getting anywhere.  My progress is painfully slow,
+both in writing the documentation and in extending the configuration
+to cover more settings.  I have failed in creating a literate
+configuration of NixOS on my computer, so I am abandoning the idea of
+a literate configuration in this case.  I will try to write about the
+reasons for this failure.
+
+My problem was that to bring the computer to a state where I could use
+Emacs, Noweb, and \TeX\ Live to develop the literate configuration, I
+already needed to have a fair amount of configuration in the computer.
+I had to create this working configuration in the usual way, that is,
+by hand (as opposed to tangling it out of a Noweb document) and
+non-literally.  I then had the task of using Noweb to describe the
+working configuration as if it was being done afresh.  I had to do
+literate programming after the programming part \textemdash\ the
+configuration \textemdash\ has been done, which is not really literate
+programming.  So I had a mass of configuration (about 600 lines) that
+I had to describe in the Noweb file, which was quite daunting and
+tiring.
+
+Another thing was that I could not tangle the code from the Noweb file
+to the actual target, the file \filename{configuration.nix}, because
+any mistakes in the configuration chunks of the Noweb file would then
+result in a broken computer system.  So I had to tangle the code from
+the Noweb file to a different file,
+\filename{configuration-noweb.nix}.
+
+While writing the Noweb file, I had to add some more configuration
+items to \filename{configuration.nix}, and those too needed to be
+documented.  I was writing documentation for a configuration file that
+changed every now and then.  It made an already difficult task even
+more so.  As a result, I hesitated to add new configuration to
+\filename{configuration.nix}, so there are large parts of my computer
+system that are not yet configured.
+
 \bibsection
 
 \nowebchunkssection
