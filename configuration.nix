@@ -569,6 +569,12 @@
     programs.firefox.enable = true;
 
     ## ===============================================================
+    ## Fonts
+    ## ===============================================================
+
+    fonts.fontconfig.enable = true;
+
+    ## ===============================================================
     ## Packages that are not Home Manager modules
     ## ===============================================================
 
@@ -598,6 +604,7 @@
       [
         aspellPackage
         pkgs.gnumake
+        pkgs.lohit-fonts.telugu
         pkgs.noweb
         pkgs.scowl
         texlivePackageNoCollisions
