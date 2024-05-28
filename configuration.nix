@@ -144,7 +144,6 @@
   ## =================================================================
 
   home-manager.useGlobalPkgs = true;
-  home-manager.useUserPackages = true;
 
   ## =================================================================
   ## User settings of Home Manager
