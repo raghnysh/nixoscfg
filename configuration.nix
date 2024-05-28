@@ -363,6 +363,11 @@
       (add-function :after after-focus-change-function
         #'my-set-focused-frames-font-for-monitor)
 
+      (setq custom-file
+        (expand-file-name "custom.el" user-emacs-directory))
+      (when (file-exists-p custom-file)
+        (load custom-file))
+
       (setq-default indent-tabs-mode nil)
       (set-fontset-font t '(#x1d7d8 . #x1d7e1) "DejaVu Sans")
       (set-fontset-font t '(#x1d538 . #x1d56b) "DejaVu Sans")
