@@ -279,6 +279,12 @@
     programs.direnv.enable = true;
 
     ## ===============================================================
+    ## Java
+    ## ===============================================================
+
+    programs.java.enable = true;
+
+    ## ===============================================================
     ## Git
     ## ===============================================================
 
@@ -303,6 +309,8 @@
     programs.emacs.extraPackages = epkgs: with epkgs; [
       agda-input
       auctex
+      bnfc
+      haskell-mode
       magit
       nix-mode
       pdf-tools
@@ -639,14 +647,46 @@
           en-science
         ]
       );
+      jlex = pkgs.stdenv.mkDerivation rec {
+        pname = "jlex";
+        version = "1.2.6";
+        src = pkgs.fetchurl {
+          url = "https://www.cs.princeton.edu/~appel/modern/java/JLex/Archive/1.2.6/Main.java";
+          sha256 = "1msblmsgzij3z9pwm7gff1q2cv1q802q23xsn0mrflrs7g7axsxf";
+        };
+        dontUnpack = true;
+        buildInputs = [ pkgs.jdk ];
+        buildPhase = ''
+          cp ${src} Main.java
+          javac -d . Main.java
+          jar cf ${pname}-${version}.jar JLex/*.class
+        '';
+        installPhase = ''
+          mkdir -p $out/share/java
+          cp ${pname}-${version}.jar $out/share/java
+        '';
+      };
     in
       [
         aspellPackage
+        jlex
+        pkgs.binutils
         pkgs.ffmpeg-full
+        pkgs.fpc
         pkgs.gnumake
+        pkgs.haskellPackages.alex
+        pkgs.haskellPackages.bhoogle
+        pkgs.haskellPackages.BNFC
+        pkgs.haskellPackages.ghc
+        pkgs.haskellPackages.happy
+        pkgs.haskellPackages.hoogle
+        pkgs.jasmin
+        pkgs.javaCup
         pkgs.lohit-fonts.telugu
+        pkgs.mmixware
         pkgs.mplayer
         pkgs.noweb
+        pkgs.python3Packages.cram
         pkgs.scowl
         texlivePackageNoCollisions
       ];
