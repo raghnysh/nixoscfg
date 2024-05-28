@@ -638,8 +638,10 @@
     in
       [
         aspellPackage
+        pkgs.ffmpeg-full
         pkgs.gnumake
         pkgs.lohit-fonts.telugu
+        pkgs.mplayer
         pkgs.noweb
         pkgs.scowl
         texlivePackageNoCollisions
