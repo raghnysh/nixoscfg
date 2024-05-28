@@ -482,10 +482,16 @@
                                     (my-make "clean")))))
 
       (yas-define-snippets 'latex-mode
-                           '(("zft" "\\firstterm{$1}$0")
+                           '(;; Analogue of DocBook `firstterm'
+                             ("zft" "\\firstterm{$1}$0")
+                             ;; Noweb identifier
                              ("zv" "\\nwverb|$1|$0")
+                             ;; Inline math mode
                              ("zm" "\\\\($1\\\\)$0")
-                             ("zcc" "\<\<$1\>\>=\n$0\n@")))
+                             ;; Noweb code chunk
+                             ("zcc" "\<\<$1\>\>=\n$0\n@")
+                             ;; Set builder notation
+                             ("zsetb" "\\\\{ $1 \\,\\vert\\, $2 \\\\}$0")))
 
       (add-hook 'LaTeX-mode-hook #'turn-on-reftex)
       (setq reftex-plug-into-AUCTeX t)
