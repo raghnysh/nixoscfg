@@ -566,6 +566,9 @@
       (setq reftex-find-label-regexp-format "\\(label[[:space:]]*=[[:space:]]*\\|\\\\label\\|\\\\nextchunklabel\\)\\([[{][^]}]*[]}]\\)*[[{]\\(%s\\)[]}]")
 
       (pdf-tools-install)
+      (add-hook 'pdf-view-mode-hook
+                #'(lambda ()
+                    (pdf-view-fit-page-to-window)))
       (setq pdf-view-midnight-colors '("black" . "gray98"))
       (add-to-list 'pdf-tools-enabled-modes 'pdf-view-midnight-minor-mode)
       (setq TeX-source-correlate-method 'synctex)
