@@ -301,6 +301,7 @@
     programs.emacs.package = pkgs.emacs29-pgtk;
 
     programs.emacs.extraPackages = epkgs: with epkgs; [
+      agda-input
       auctex
       magit
       nix-mode
@@ -376,6 +377,10 @@
       (setq ispell-alternate-dictionary "/etc/profiles/per-user/raghnysh/share/dict/wbritish.txt")
       (setq ispell-silently-savep t)
       (tab-bar-mode 1)
+
+      (require 'agda-input)
+      (set-language-environment "UTF-8")
+      (setq default-input-method "Agda")
 
       (setq-default compilation-scroll-output 'first-error)
       (setq my-compilation-frame-name "compilation")
