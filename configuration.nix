@@ -149,7 +149,7 @@
   ## User settings of Home Manager
   ## =================================================================
 
-  home-manager.users.raghnysh = { pkgs, ... }: {
+  home-manager.users.raghnysh = { pkgs, lib, ... }: {
     ## ===============================================================
     ## Base version of Home Manager
     ## ===============================================================
@@ -171,6 +171,20 @@
     ## Pause = "Fn P" (Thinkpad p15v Gen 1 User Guide, page 17)
     dconf.settings."org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/suspend".binding = "Pause";
     dconf.settings."org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/suspend".command = "systemctl suspend";
+
+    ## ===============================================================
+    ## Input methods
+    ## ===============================================================
+
+    ## https://discourse.nixos.org/t/keyboard-layout-with-gnome/21996/9
+    dconf.settings."org/gnome/desktop/input-sources".show-all-sources = true;
+
+    dconf.settings."org/gnome/desktop/input-sources".sources = [
+      (lib.hm.gvariant.mkTuple [ "xkb" "us" ])
+      (lib.hm.gvariant.mkTuple [ "xkb" "in+tel-sarala" ])
+    ];
+
+    dconf.settings."org/gnome/desktop/input-sources".xkb-options = [ "terminate:ctrl_alt_bksp" ];
 
     ## ===============================================================
     ## Display of notifications on locked screen
