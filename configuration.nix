@@ -310,6 +310,7 @@
       agda-input
       auctex
       bnfc
+      ess
       haskell-mode
       magit
       nix-mode
@@ -666,6 +667,11 @@
           cp ${pname}-${version}.jar $out/share/java
         '';
       };
+      rPackage = pkgs.rWrapper.override {
+        packages = [
+          pkgs.rPackages.ISwR
+        ];
+      };
     in
       [
         aspellPackage
@@ -688,6 +694,7 @@
         pkgs.noweb
         pkgs.python3Packages.cram
         pkgs.scowl
+        rPackage
         texlivePackageNoCollisions
       ];
   };
