@@ -315,6 +315,7 @@
       magit
       nix-mode
       pdf-tools
+      sml-mode
       yasnippet
     ];
 
@@ -689,11 +690,14 @@
         pkgs.jasmin
         pkgs.javaCup
         pkgs.lohit-fonts.telugu
+        pkgs.mlton
         pkgs.mmixware
         pkgs.mplayer
         pkgs.noweb
+        pkgs.polyml
         pkgs.python3Packages.cram
         pkgs.scowl
+        pkgs.smlnj
         rPackage
         texlivePackageNoCollisions
       ];
