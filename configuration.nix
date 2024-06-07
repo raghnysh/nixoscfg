@@ -668,10 +668,14 @@
           cp ${pname}-${version}.jar $out/share/java
         '';
       };
+      rExtraPackages = [
+        pkgs.rPackages.ISwR
+      ];
       rPackage = pkgs.rWrapper.override {
-        packages = [
-          pkgs.rPackages.ISwR
-        ];
+        packages = rExtraPackages;
+      };
+      rstudioPackage = pkgs.rstudioWrapper.override {
+        packages = rExtraPackages;
       };
     in
       [
@@ -699,6 +703,7 @@
         pkgs.scowl
         pkgs.smlnj
         rPackage
+        rstudioPackage
         texlivePackageNoCollisions
       ];
   };
