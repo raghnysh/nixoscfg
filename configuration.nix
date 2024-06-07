@@ -310,6 +310,7 @@
       agda-input
       auctex
       bnfc
+      company
       ess
       haskell-mode
       magit
@@ -428,6 +429,12 @@
             (delete-frame compilation-frame))))
 
       (add-hook 'compilation-finish-functions #'my-delete-compilation-frame)
+
+      (add-hook 'after-init-hook 'global-company-mode)
+      (with-eval-after-load 'company
+        (keymap-set company-active-map "<down>"
+                    #'company-complete-common-or-cycle))
+      (setq company-show-numbers t)
 
       (yas-global-mode 1)
 
