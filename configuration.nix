@@ -396,6 +396,7 @@
       (setq ispell-alternate-dictionary "/etc/profiles/per-user/raghnysh/share/dict/wbritish.txt")
       (setq ispell-silently-savep t)
       (tab-bar-mode 1)
+      (repeat-mode 1)
 
       (require 'agda-input)
       (set-language-environment "UTF-8")
