@@ -691,27 +691,45 @@
       [
         aspellPackage
         jlex
+        pkgs.bashmount
         pkgs.binutils
+        pkgs.cloc
         pkgs.ffmpeg-full
         pkgs.fpc
         pkgs.gnumake
+        pkgs.gparted
         pkgs.haskellPackages.alex
         pkgs.haskellPackages.bhoogle
         pkgs.haskellPackages.BNFC
         pkgs.haskellPackages.ghc
         pkgs.haskellPackages.happy
         pkgs.haskellPackages.hoogle
+        pkgs.id3lib
+        pkgs.id3v2
         pkgs.jasmin
         pkgs.javaCup
+        pkgs.jmtpfs
         pkgs.lohit-fonts.telugu
+        pkgs.libreoffice
         pkgs.mlton
         pkgs.mmixware
+        pkgs.mp3info
         pkgs.mplayer
         pkgs.noweb
+        pkgs.pdftk
+        pkgs.perlPackages.MP3Tag
         pkgs.polyml
         pkgs.python3Packages.cram
+        pkgs.qpdf
+        pkgs.rclone
         pkgs.scowl
         pkgs.smlnj
+        pkgs.speedtest-cli
+        pkgs.tor-browser-bundle-bin
+        pkgs.unzip
+        pkgs.vlc
+        pkgs.wget
+        pkgs.yt-dlp
         rPackage
         rstudioPackage
         texlivePackageNoCollisions
