@@ -1,5 +1,7 @@
 ### NixOS configuration file
 
+{ pkgs, ... }:
+
 {
   ## =================================================================
   ## Base version of NixOS
@@ -67,9 +69,30 @@
   ## =================================================================
 
   services.printing.enable = true;
+  programs.system-config-printer.enable = true;
   services.avahi.enable = true;
   services.avahi.nssmdns = true;
   services.avahi.openFirewall = true;
+  services.printing.drivers = [ pkgs.cups-brother-hll2350dw ];
+  hardware.printers.ensureDefaultPrinter = "brother";
+  hardware.printers.ensurePrinters = 
+    let
+      brother = {
+        description = "Brother HL-L2351DW (Brother HL-L2350DW series)";
+        deviceUri = "dnssd://Brother%20HL-L2350DW%20series._ipp._tcp.local/?uuid=e3248000-80ce-11db-8000-105bad1b9af0";
+        location = "study";
+        model = "brother-HLL2350DW-cups-en.ppd";
+        name = "brother";
+        ppdOptions.InputSlot = "Auto";
+        ppdOptions.MediaType = "Stationery";
+        ppdOptions.cupsPrintQuality = "Normal";
+        ppdOptions.ColorModel = "Gray";
+        ppdOptions.Duplex = "DuplexNoTumble";
+        ppdOptions.OutputBin = "FaceDown";
+        ppdOptions.copies = "1";
+      };
+    in
+      [ brother ];
 
   ## =================================================================
   ## Sound
@@ -695,6 +718,7 @@
         pkgs.bashmount
         pkgs.binutils
         pkgs.cloc
+        pkgs.cups-brother-hll2350dw
         pkgs.ffmpeg-full
         pkgs.fpc
         pkgs.gnumake
