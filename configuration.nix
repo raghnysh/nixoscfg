@@ -316,6 +316,7 @@
       company
       ess
       haskell-mode
+      htmlize
       magit
       nix-mode
       pdf-tools
@@ -723,9 +724,12 @@
         pkgs.python3Packages.cram
         pkgs.qpdf
         pkgs.rclone
+        pkgs.recutils
         pkgs.scowl
         pkgs.smlnj
         pkgs.speedtest-cli
+        pkgs.stremio
+        pkgs.thunderbird
         pkgs.tor-browser-bundle-bin
         pkgs.unzip
         pkgs.vlc
