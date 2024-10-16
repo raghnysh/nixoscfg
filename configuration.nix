@@ -5,7 +5,7 @@
   ## Base version of NixOS
   ## =================================================================
 
-  system.stateVersion = "23.05";
+  system.stateVersion = "24.05";
 
   ## =================================================================
   ## Copy of this file at /run/current-system/configuration.nix
@@ -20,8 +20,8 @@
   imports = [
     ./hardware-configuration.nix
     "${builtins.fetchTarball {
-      url = "https://github.com/nix-community/home-manager/archive/release-23.05.tar.gz";
-      sha256 = "0rwzab51hnr6cmm1w5zmfh29gbkg6byv8jnr7frcv5kd6m8kna41";
+      url = "https://github.com/nix-community/home-manager/archive/release-24.05.tar.gz";
+      sha256 = "00wp0s9b5nm5rsbwpc1wzfrkyxxmqjwsc1kcibjdbfkh69arcpsn";
     }}/nixos"
   ];
 
@@ -157,7 +157,7 @@
     ## Base version of Home Manager
     ## ===============================================================
 
-    home.stateVersion = "23.05";
+    home.stateVersion = "24.05";
 
     ## ===============================================================
     ## Custom keybindings
@@ -703,7 +703,7 @@
         pkgs.gnumake
         pkgs.gparted
         pkgs.haskellPackages.alex
-        pkgs.haskellPackages.bhoogle
+        ## pkgs.haskellPackages.bhoogle
         pkgs.haskellPackages.BNFC
         pkgs.haskellPackages.ghc
         pkgs.haskellPackages.happy
