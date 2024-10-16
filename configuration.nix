@@ -435,6 +435,7 @@
         pkgs.thunderbird
         pkgs.tor-browser-bundle-bin
         pkgs.unzip
+        pkgs.vim
         pkgs.vlc
         pkgs.wget
         pkgs.yt-dlp
