@@ -8,6 +8,14 @@
   system.stateVersion = "24.05";
 
   ## =================================================================
+  ## Automatic upgrades
+  ## =================================================================
+
+  system.autoUpgrade.enable = true;
+  system.autoUpgrade.allowReboot = true;
+  system.autoUpgrade.channel = "https://channels.nixos.org/nixos-24.05";
+
+  ## =================================================================
   ## Copy of this file at /run/current-system/configuration.nix
   ## =================================================================
 
@@ -59,8 +67,8 @@
   services.xserver.enable = true;
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
-  services.xserver.layout = "us";
-  services.xserver.xkbVariant = "";
+  services.xserver.xkb.layout = "us";
+  services.xserver.xkb.variant = "";
 
   ## =================================================================
   ## Printing
@@ -68,7 +76,7 @@
 
   services.printing.enable = true;
   services.avahi.enable = true;
-  services.avahi.nssmdns = true;
+  services.avahi.nssmdns4 = true;
   services.avahi.openFirewall = true;
 
   ## =================================================================
@@ -703,7 +711,6 @@
         pkgs.gnumake
         pkgs.gparted
         pkgs.haskellPackages.alex
-        ## pkgs.haskellPackages.bhoogle
         pkgs.haskellPackages.BNFC
         pkgs.haskellPackages.ghc
         pkgs.haskellPackages.happy
