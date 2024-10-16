@@ -13,7 +13,7 @@
 
   system.autoUpgrade.enable = true;
   system.autoUpgrade.allowReboot = true;
-  system.autoUpgrade.channel = "https://channels.nixos.org/nixos-24.05";
+  system.autoUpgrade.channel = "https://channels.nixos.org/nixos-unstable";
 
   ## =================================================================
   ## Copy of this file at /run/current-system/configuration.nix
@@ -27,10 +27,7 @@
 
   imports = [
     ./hardware-configuration.nix
-    "${builtins.fetchTarball {
-      url = "https://github.com/nix-community/home-manager/archive/release-24.05.tar.gz";
-      sha256 = "00wp0s9b5nm5rsbwpc1wzfrkyxxmqjwsc1kcibjdbfkh69arcpsn";
-    }}/nixos"
+    "${builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/master.tar.gz"}/nixos"
   ];
 
   ## =================================================================
@@ -83,7 +80,6 @@
   ## Sound
   ## =================================================================
 
-  sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire.enable = true;
@@ -318,7 +314,7 @@
     programs.emacs.package = pkgs.emacs29-pgtk;
 
     programs.emacs.extraPackages = epkgs: with epkgs; [
-      agda-input
+      agda2-mode
       auctex
       bnfc
       company
@@ -418,7 +414,6 @@
         pkgs.libreoffice
         pkgs.mlton
         pkgs.mmixware
-        pkgs.mp3info
         pkgs.mplayer
         pkgs.noweb
         pkgs.pdftk
