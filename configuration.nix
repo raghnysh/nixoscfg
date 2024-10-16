@@ -354,19 +354,9 @@
     ## ===============================================================
 
     home.packages = let
-      pkgs2211Path = builtins.fetchTarball {
-        url = "https://github.com/NixOS/nixpkgs/archive/nixos-22.11.tar.gz";
-        sha256 = "1xi53rlslcprybsvrmipm69ypd3g3hr7wkxvzc73ag8296yclyll";
-      };
-      pkgs2211 = import pkgs2211Path { config = pkgs.config; };
-      texlivePackage = pkgs2211.texlive.combine {
-        inherit (pkgs2211.texlive) scheme-full;
-        pkgFilter = pkg:
-          pkgs2211.lib.elem pkg.tlType [ "run" "bin" "doc" ];
+      texlivePackage = pkgs.texlive.combine {
+        inherit (pkgs.texlive) scheme-full;
         noweb = { pkgs = [ pkgs.noweb ]; };
-      };
-      texlivePackageNoCollisions = texlivePackage.override {
-        ignoreCollisions = true;
       };
       aspellPackage = pkgs.aspellWithDicts (dicts:
         with dicts; [
@@ -450,7 +440,7 @@
         pkgs.yt-dlp
         rPackage
         rstudioPackage
-        texlivePackageNoCollisions
+        texlivePackage
       ];
   };
 }
