@@ -328,8 +328,6 @@
       yasnippet
     ];
 
-    programs.emacs.extraConfig = builtins.readFile ./default.el;
-
     home.file."init.el".target = ".emacs.d/init.el";
     home.file."init.el".source = ./init.el;
 
