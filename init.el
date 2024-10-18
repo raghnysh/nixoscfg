@@ -1,101 +1,118 @@
+;;; Emacs init file
+
+;; ===================================================================
+;; Appearance
+;; ===================================================================
+
 (setq inhibit-startup-screen t)
-
-(setq frame-title-format
-      '("Emacs: " (:eval (or buffer-file-name
-                             dired-directory
-                             (buffer-name)))))
-
+(setq frame-title-format '("Emacs: " (:eval (or buffer-file-name dired-directory (buffer-name)))))
 (fringe-mode 1)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
-(set-scroll-bar-mode nil)
+(set-scroll-bar-mode -1)
 (load-theme 'modus-operandi)
-(defvar my-laptop-monitor-font "DejaVu Sans Mono 18")
-(defvar my-external-monitor-font "DejaVu Sans Mono 14")
-(modify-all-frames-parameters `((font . ,my-laptop-monitor-font)))
-(defvar my-laptop-monitor-name "0x08c6")
-(defvar my-external-monitor-name "DELL U2415")
 
-(defun my-frame-monitor-name (&optional frame)
-  (frame-monitor-attribute 'name frame))
+;; ===================================================================
+;; Default fonts
+;; ===================================================================
 
-(defun my-monitor-external-p (monitor-name)
-  (string-equal monitor-name my-external-monitor-name))
+(defvar my-small-font "DejaVu Sans Mono 14"
+  "Small font that is mainly for my external monitor.")
 
-(defun my-set-frame-font-for-monitor (&optional frame monitor-name)
+(defvar my-large-font "DejaVu Sans Mono 18"
+  "Large font that is mainly for my laptop monitor.")
+
+(modify-all-frames-parameters `((font . ,my-small-font)))
+
+(defun my-frame-set-small-font (&optional frame)
+  "Set the font of the frame FRAME to `my-small-font'.
+FRAME defaults to the selected frame."
   (interactive)
-  (set-frame-parameter frame 'font
-                       (if (my-monitor-external-p (or monitor-name
-                                                      (my-frame-monitor-name frame)))
-                           my-external-monitor-font
-                         my-laptop-monitor-font)))
+  (set-frame-parameter frame 'font my-small-font))
 
-(defun my-set-frame-font-for-laptop-monitor (&optional frame)
+(defun my-frame-set-large-font (&optional frame)
+  "Set the font of the frame FRAME to `my-large-font'.
+FRAME defaults to the selected frame."
   (interactive)
-  (my-set-frame-font-for-monitor frame my-laptop-monitor-name))
+  (set-frame-parameter frame 'font my-large-font))
 
-(defun my-set-frame-font-for-external-monitor (&optional frame)
-  (interactive)
-  (my-set-frame-font-for-monitor frame my-external-monitor-name))
+(keymap-global-set "s--" #'my-frame-set-small-font)
+(keymap-global-set "s-=" #'my-frame-set-large-font)
 
-(keymap-global-set "s-0" #'my-set-frame-font-for-monitor)
-(keymap-global-set "s-=" #'my-set-frame-font-for-laptop-monitor)
-(keymap-global-set "s--" #'my-set-frame-font-for-external-monitor)
+;; ===================================================================
+;; Fonts for special characters
+;; ===================================================================
 
-(defun my-set-focused-frames-font-for-monitor ()
-  (dolist (frame (frame-list))
-    (when (eq (frame-focus-state frame) t)
-      (my-set-frame-font-for-monitor frame))))
-
-;; https://lists.gnu.org/archive/html/help-gnu-emacs/2016-05/msg00172.html
-;; The hook after-make-frame-functions used there is now
-;; deprecated, and replaced with after-focus-change-function.
-(add-function :after after-focus-change-function
-              #'my-set-focused-frames-font-for-monitor)
-
-(setq custom-file
-      (expand-file-name "custom.el" user-emacs-directory))
-(when (file-exists-p custom-file)
-  (load custom-file))
-
-(setq-default indent-tabs-mode nil)
 (set-fontset-font t '(#x1d7d8 . #x1d7e1) "DejaVu Sans")
 (set-fontset-font t '(#x1d538 . #x1d56b) "DejaVu Sans")
+
+;; ===================================================================
+;; `custom' library settings
+;; ===================================================================
+
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file) (load custom-file))
+
+;; ===================================================================
+;; Settings to all modes
+;; ===================================================================
+
+(setq-default indent-tabs-mode nil)
+
+;; ===================================================================
+;; Interface settings
+;; ===================================================================
+
 (setopt auto-save-visited-interval 2)
 (auto-save-visited-mode 1)
+
 (setopt auto-revert-interval 2)
 (global-auto-revert-mode 1)
+
 (global-display-fill-column-indicator-mode 1)
-(add-hook 'text-mode-hook 'turn-on-auto-fill)
-(add-hook 'text-mode-hook 'turn-on-flyspell)
 (setq make-backup-files nil)
-(setq ispell-alternate-dictionary "/etc/profiles/per-user/raghnysh/share/dict/wbritish.txt")
-(setq ispell-silently-savep t)
 (tab-bar-mode 1)
 (repeat-mode 1)
 
-(require 'agda-input)
+;; ===================================================================
+;; Text mode
+;; ===================================================================
+
+(add-hook 'text-mode-hook 'turn-on-auto-fill)
+
+(add-hook 'text-mode-hook 'turn-on-flyspell)
+(setq ispell-alternate-dictionary (expand-file-name "~/.nix-profile/share/dict/wbritish.txt"))
+(setq ispell-silently-savep t)
+
+;; ===================================================================
+;; Input methods
+;; ===================================================================
+
 (set-language-environment "UTF-8")
 (setq default-input-method "Agda")
 
+;; ===================================================================
+;; Compilation
+;; ===================================================================
+
 (setq-default compilation-scroll-output 'first-error)
-(setq my-compilation-frame-name "compilation")
+
+(defvar my-compilation-frame-name "compilation"
+  "The name of a dedicated frame for compilation buffers.")
 
 (add-to-list 'display-buffer-alist
              `(,(rx (and string-start "*compilation*" string-end))
-               (display-buffer-reuse-window
-                display-buffer-pop-up-frame)
+               (display-buffer-reuse-window display-buffer-pop-up-frame)
                (reusable-frames . t)
-               (pop-up-frame-parameters
-                .
-                ((name . ,my-compilation-frame-name)
-                 (height . 20)
-                 (width . 80)
-                 (user-position . t)
-                 (top . 0)
-                 (left . 0)))))
+               (pop-up-frame-parameters . ((name . ,my-compilation-frame-name)
+                                           (height . 20)
+                                           (width . 80)
+                                           (user-position . t)
+                                           (top . 0)
+                                           (left . 0)))))
 
-(defun my-delete-compilation-frame (buffer message)
+(defun my-delete-compilation-frame (_buffer message)
+  "Delete the compilation frame if MESSAGE declares success."
   (let* ((successful (string-match "\\bfinished\\b" message))
          (compilation-frame
           (car (filtered-frame-list
@@ -110,24 +127,65 @@
 
 (add-hook 'compilation-finish-functions #'my-delete-compilation-frame)
 
+;; ===================================================================
+;; Company mode
+;; ===================================================================
+
 (add-hook 'after-init-hook 'global-company-mode)
+
 (with-eval-after-load 'company
-  (keymap-set company-active-map "<down>"
-              #'company-complete-common-or-cycle))
-(setq company-show-numbers t)
+  (keymap-set company-active-map "<down>" #'company-complete-common-or-cycle))
+
+(setq company-show-quick-access t)
+
+;; ===================================================================
+;; Yasnippet templates
+;; ===================================================================
 
 (yas-global-mode 1)
 
-(setq org-src-preserve-indentation t)
+;; ===================================================================
+;; Makefile commands
+;; ===================================================================
+
+(defun my-make (target)
+  "Run `make TARGET' in the current directory."
+  (save-some-buffers t)
+  (let* ((compile-command (format "make %s" target)))
+    (recompile)))
+
+(defun my-make-keymap-set (keymap)
+  "Set key bindings for `make' commands in keymap KEYMAP."
+  (keymap-set keymap "<kp-left>"
+              #'(lambda ()
+                  "Run `make all' in the current directory."
+                  (interactive)
+                  (my-make "all")))
+  (keymap-set keymap "<kp-right>"
+              #'(lambda ()
+                  "Run `make clean' in the current directory."
+                  (interactive)
+                  (my-make "clean")))
+  (keymap-set keymap "<kp-up>"
+              #'(lambda ()
+                  "Run `make upload' in the current directory."
+                  (interactive)
+                  (my-make "upload"))))
+
+(add-hook 'LaTeX-mode-hook #'(lambda () (my-make-keymap-set LaTeX-mode-map)))
+(add-hook 'org-mode-hook #'(lambda () (my-make-keymap-set org-mode-map)))
+
+;; ===================================================================
+;; AUCTeX
+;; ===================================================================
 
 (load "auctex.el" nil t t)
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
 (setq-default TeX-master t)
-
 (add-to-list 'auto-mode-alist '("\\.nw\\'" . LaTeX-mode))
 
-(add-hook 'LaTeX-mode-hook #'LaTeX-math-mode
+(add-hook 'LaTeX-mode-hook
           #'(lambda ()
               (LaTeX-math-mode 1)
               (keymap-set LaTeX-math-mode-map "\140 c"
@@ -163,23 +221,6 @@
                                        'textual)
               (font-latex-setup)))
 
-(defun my-make (target)
-  "Compile the current LaTeX document."
-  (save-some-buffers t)
-  (let* ((compile-command (format "make %s" target)))
-    (recompile)))
-
-(add-hook 'LaTeX-mode-hook
-          #'(lambda ()
-              (keymap-set LaTeX-mode-map "<kp-left>"
-                          #'(lambda ()
-                              (interactive)
-                              (my-make "all")))
-              (keymap-set LaTeX-mode-map "<kp-right>"
-                          #'(lambda ()
-                              (interactive)
-                              (my-make "clean")))))
-
 (yas-define-snippets 'latex-mode
                      '(;; Analogue of DocBook `firstterm'
                        ("zft" "\\firstterm{$1}$0")
@@ -191,6 +232,10 @@
                        ("zcc" "\<\<$1\>\>=\n$0\n@")
                        ;; Set builder notation
                        ("zsetb" "\\\\{ $1 \\,\\vert\\, $2 \\\\}$0")))
+
+;; ===================================================================
+;; RefTeX
+;; ===================================================================
 
 (add-hook 'LaTeX-mode-hook #'turn-on-reftex)
 (setq reftex-plug-into-AUCTeX t)
@@ -252,7 +297,6 @@
                                                       ("\\Ref" ?R))))
               (setq reftex-ref-style-default-list '("Personal"))))
 
-
 (add-hook 'reftex-mode-hook
           #'(lambda ()
               (keymap-set reftex-mode-map
@@ -264,6 +308,10 @@
 
 (setq reftex-find-label-regexp-format "\\(label[[:space:]]*=[[:space:]]*\\|\\\\label\\|\\\\nextchunklabel\\)\\([[{][^]}]*[]}]\\)*[[{]\\(%s\\)[]}]")
 
+;; ===================================================================
+;; PDF viewer
+;; ===================================================================
+
 (pdf-tools-install)
 (add-hook 'pdf-view-mode-hook
           #'(lambda ()
@@ -273,6 +321,10 @@
 (setq TeX-source-correlate-method 'synctex)
 (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
 (add-hook 'LaTeX-mode-hook #'TeX-source-correlate-mode)
+
+;; ===================================================================
+;; BibTeX
+;; ===================================================================
 
 (setq bibtex-dialect 'biblatex)
 (setq bibtex-user-optional-fields nil)
@@ -285,11 +337,15 @@
       #'(lambda (_key)
           (format "bib:%s" (my-label 8 t t))))
 
-(setq bibtex-autokey-titleword-ignore
-      '("A" "An" "On" "The" "Eine?" "Der" "Die" "Das"
-        "[^[:upper:][:lower:]].*" ".*[^[:upper:][:lower:]0-9].*"))
-
 (add-hook 'bibtex-mode-hook
           #'(lambda ()
               (dolist (spec '(whitespace realign last-comma delimiters unify-case braces sort-fields))
                 (add-to-list 'bibtex-entry-format spec))))
+
+;; ===================================================================
+;; Org mode
+;; ===================================================================
+
+(setq org-src-preserve-indentation t)
+
+;;; End of file
