@@ -379,6 +379,51 @@
           cp ${pname}-${version}.jar $out/share/java
         '';
       };
+      oxygenXmlEditor = let
+        jdk = (pkgs.jdk17.override { enableJavaFX = true; });
+        tar = builtins.fetchTarball {
+          url = "https://archives.oxygenxml.com/Oxygen/Editor/InstData26.1/All/oxygen.tar.gz";
+          #2024-10-20: `nix-prefetch-url --unpack' gives a mismatch; use sha256 = lib.fakeSha256;
+          sha256 = "1w5lqid58bjpnnm4smffsmf4x1i3mq25j2r9d526frgk3cjrcy21";
+        };
+        svg = pkgs.fetchurl {
+          url = "https://www.oxygenxml.com/resellers/resources/OxygenXMLEditor_icon_2019.svg";
+          sha256 = "rQ7IpU3B83LGEWnXruPtT1glxT8HdqOAbADQaYUwbYQ=";
+        };
+        desktopItem = pkgs.makeDesktopItem {
+          name = "oxygen-xml-editor";
+          desktopName = "O₂ XML Editor";
+          exec = "oxygenxmleditor";
+          icon = "oxygen-xml-editor";
+        };
+      in
+        pkgs.stdenv.mkDerivation rec {
+          pname = "oxygen-xml-editor";
+          version = "26.1";
+          srcs = [ tar svg ];
+          sourceRoot = ".";
+          buildInputs = [ jdk ];
+          nativeBuildInputs = [ pkgs.makeWrapper ];
+          dontPatch = true;
+          dontUpdateAutotoolsGnuConfigScripts = true;
+          dontConfigure = true;
+          dontBuild = true;
+          dontFixup = true;
+          unpackPhase = ''
+            runHook preUnpack
+            cp -a ${tar}/* .
+            cp ${svg} oxygen-xml-editor.svg
+            runHook postUnpack
+          '';
+          installPhase = ''
+            cp -a . $out
+            makeWrapper $out/oxygen.sh $out/bin/oxygenxmleditor --set JAVA_HOME ${jdk.home}
+            mkdir -p $out/share/{applications,icons}
+            ## copyDesktopItems should work here, but I am unable to make it work.
+            cp -a ${desktopItem}/share/applications/oxygen-xml-editor.desktop $out/share/applications
+            mv oxygen-xml-editor.svg $out/share/icons
+          '';
+        };
       rExtraPackages = [
         pkgs.rPackages.ISwR
       ];
@@ -392,6 +437,7 @@
       [
         aspellPackage
         jlex
+        oxygenXmlEditor
         pkgs.bashmount
         pkgs.binutils
         pkgs.cloc
