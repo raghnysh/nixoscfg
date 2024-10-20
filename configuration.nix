@@ -323,6 +323,7 @@
       htmlize
       magit
       nix-mode
+      org-ml
       pdf-tools
       sml-mode
       yasnippet
@@ -403,6 +404,7 @@
         pkgs.haskellPackages.ghc
         pkgs.haskellPackages.happy
         pkgs.haskellPackages.hoogle
+        pkgs.home-manager
         pkgs.id3lib
         pkgs.id3v2
         pkgs.jasmin
