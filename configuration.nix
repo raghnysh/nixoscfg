@@ -351,6 +351,7 @@
     home.packages = let
       texlivePackage = pkgs.texlive.combine {
         inherit (pkgs.texlive) scheme-full;
+        pkgFilter = pkg: lib.elem pkg.tlType [ "run" "bin" "doc" ];
         noweb = { pkgs = [ pkgs.noweb ]; };
       };
       aspellPackage = pkgs.aspellWithDicts (dicts:
