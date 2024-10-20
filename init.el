@@ -89,6 +89,7 @@ FRAME defaults to the selected frame."
 ;; ===================================================================
 
 (set-language-environment "UTF-8")
+(load "agda-input")
 (setq default-input-method "Agda")
 
 ;; ===================================================================
