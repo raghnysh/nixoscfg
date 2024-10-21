@@ -354,6 +354,10 @@
         pkgFilter = pkg: lib.elem pkg.tlType [ "run" "bin" "doc" ];
         noweb = { pkgs = [ pkgs.noweb ]; };
       };
+      # https://github.com/NixOS/nixpkgs/issues/171230#issuecomment-1115113106
+      texlivePackageNoCollisions = texlivePackage.override {
+        ignoreCollisions = true;
+      };
       aspellPackage = pkgs.aspellWithDicts (dicts:
         with dicts; [
           en
@@ -484,7 +488,7 @@
         pkgs.yt-dlp
         rPackage
         rstudioPackage
-        texlivePackage
+        texlivePackageNoCollisions
       ];
   };
 }
